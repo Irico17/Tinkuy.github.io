@@ -5,6 +5,8 @@
 <title>Tinkuy Mapa · Panel BCP</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -15,6 +17,10 @@
   .view.on{display:block;}
   .alert-row{display:flex;gap:12px;padding:14px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;border-left:4px solid #F59E0B;margin-bottom:8px;}
   .grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+  #leaflet-map{z-index:1;border-radius:12px;overflow:hidden;}
+  .leaflet-map-pane{border-radius:12px;}
+  .lf-tooltip{background:#0B0F19!important;border:1px solid #374151!important;color:#fff!important;font-size:12px!important;font-family:'Inter',sans-serif!important;padding:8px 12px!important;border-radius:8px!important;box-shadow:0 4px 12px rgba(0,0,0,.4)!important;}
+  .leaflet-tooltip-top.lf-tooltip::before{border-top-color:#374151!important;}
 </style>
 </head>
 <body>
@@ -125,10 +131,8 @@
               <span style="width:14px;height:14px;background:#10B981;border-radius:3px;"></span>Alto
             </div>
           </div>
-          <svg viewBox="0 0 400 500" style="width:100%;height:520px;" id="peruMap">
-            <g></g>
-          </svg>
-          <p style="font-size:10px;color:#9CA3AF;font-style:italic;margin:6px 0 0;">* Mapa estilizado. Productivo usará GeoJSON oficial INEI por distrito.</p>
+          <div id="leaflet-map" style="height:520px;border-radius:12px;overflow:hidden;"></div>
+          <p style="font-size:10px;color:#9CA3AF;margin:6px 0 0;">Mapa real · OpenStreetMap + CartoDB · haz clic en una región para ver sus datos</p>
         </div>
 
         <div class="card">
@@ -386,61 +390,81 @@
 </div>
 
 <script>
-// ---------- Region data + Map ----------
+// ---------- Region data + Leaflet Map ----------
 const regions = [
-  {n:'Tumbes',i:35,p:'79k',d:'13 distritos',path:'M40,40 L70,38 L78,62 L52,70 Z'},
-  {n:'Piura',i:58,p:'520k',d:'65 distritos',path:'M52,70 L100,60 L115,110 L60,118 Z'},
-  {n:'Lambayeque',i:62,p:'320k',d:'38 distritos',path:'M60,118 L115,110 L120,140 L70,150 Z'},
-  {n:'La Libertad',i:71,p:'520k',d:'83 distritos',path:'M70,150 L130,135 L145,185 L85,195 Z'},
-  {n:'Cajamarca',i:34,p:'380k',d:'127 distritos',path:'M115,110 L165,108 L170,160 L130,162 Z'},
-  {n:'Amazonas',i:22,p:'115k',d:'84 distritos',path:'M165,108 L210,108 L215,158 L170,160 Z'},
-  {n:'Loreto',i:18,p:'280k',d:'53 distritos',path:'M210,30 L370,40 L378,180 L215,158 Z'},
-  {n:'San Martín',i:44,p:'220k',d:'77 distritos',path:'M170,160 L215,158 L225,210 L180,215 Z'},
-  {n:'Áncash',i:56,p:'290k',d:'166 distritos',path:'M85,195 L160,190 L170,245 L100,250 Z'},
-  {n:'Huánuco',i:38,p:'220k',d:'76 distritos',path:'M160,190 L225,210 L230,255 L170,260 Z'},
-  {n:'Ucayali',i:28,p:'140k',d:'17 distritos',path:'M225,210 L378,180 L390,310 L240,300 Z'},
-  {n:'Lima',i:92,p:'2.4M',d:'171 distritos',path:'M85,250 L170,260 L180,320 L95,330 Z'},
-  {n:'Junín',i:64,p:'350k',d:'124 distritos',path:'M170,260 L240,300 L245,350 L180,355 Z'},
-  {n:'Huancavelica',i:29,p:'120k',d:'96 distritos',path:'M125,330 L180,335 L185,375 L135,380 Z'},
-  {n:'Ica',i:68,p:'240k',d:'43 distritos',path:'M95,330 L150,340 L155,395 L105,400 Z'},
-  {n:'Ayacucho',i:41,p:'200k',d:'119 distritos',path:'M150,340 L210,355 L215,400 L160,405 Z'},
-  {n:'Apurímac',i:33,p:'130k',d:'84 distritos',path:'M195,395 L240,395 L245,430 L200,430 Z'},
-  {n:'Cusco',i:74,p:'380k',d:'112 distritos',path:'M240,350 L320,345 L325,420 L245,425 Z'},
-  {n:'Madre de Dios',i:38,p:'55k',d:'11 distritos',path:'M310,290 L390,310 L395,360 L325,355 Z'},
-  {n:'Puno',i:47,p:'350k',d:'110 distritos',path:'M285,415 L370,415 L370,470 L290,470 Z'},
-  {n:'Arequipa',i:78,p:'370k',d:'109 distritos',path:'M195,430 L290,430 L285,470 L200,470 Z'},
-  {n:'Moquegua',i:61,p:'65k',d:'20 distritos',path:'M225,470 L275,470 L268,490 L232,490 Z'},
-  {n:'Tacna',i:66,p:'95k',d:'28 distritos',path:'M232,490 L268,490 L260,478 Z'},
+  {n:'Tumbes',      lat:-3.57, lng:-80.45, i:35, p:'79k',  d:'13 distritos'},
+  {n:'Piura',       lat:-5.18, lng:-80.63, i:58, p:'520k', d:'65 distritos'},
+  {n:'Lambayeque',  lat:-6.77, lng:-79.83, i:62, p:'320k', d:'38 distritos'},
+  {n:'La Libertad', lat:-7.88, lng:-78.23, i:71, p:'520k', d:'83 distritos'},
+  {n:'Cajamarca',   lat:-6.88, lng:-78.52, i:34, p:'380k', d:'127 distritos'},
+  {n:'Amazonas',    lat:-5.15, lng:-78.02, i:22, p:'115k', d:'84 distritos'},
+  {n:'Loreto',      lat:-4.87, lng:-74.98, i:18, p:'280k', d:'53 distritos'},
+  {n:'San Martín',  lat:-6.99, lng:-76.49, i:44, p:'220k', d:'77 distritos'},
+  {n:'Áncash',      lat:-9.32, lng:-77.56, i:56, p:'290k', d:'166 distritos'},
+  {n:'Huánuco',     lat:-9.88, lng:-76.24, i:38, p:'220k', d:'76 distritos'},
+  {n:'Ucayali',     lat:-9.52, lng:-73.50, i:28, p:'140k', d:'17 distritos'},
+  {n:'Pasco',       lat:-10.44,lng:-75.50, i:31, p:'90k',  d:'28 distritos'},
+  {n:'Lima',        lat:-11.90,lng:-76.50, i:92, p:'2.4M', d:'171 distritos'},
+  {n:'Callao',      lat:-12.06,lng:-77.12, i:88, p:'310k', d:'6 distritos'},
+  {n:'Junín',       lat:-11.45,lng:-75.20, i:64, p:'350k', d:'124 distritos'},
+  {n:'Huancavelica',lat:-12.93,lng:-74.83, i:29, p:'120k', d:'96 distritos'},
+  {n:'Ica',         lat:-14.07,lng:-75.74, i:68, p:'240k', d:'43 distritos'},
+  {n:'Ayacucho',    lat:-13.96,lng:-74.19, i:41, p:'200k', d:'119 distritos'},
+  {n:'Apurímac',    lat:-14.05,lng:-73.09, i:33, p:'130k', d:'84 distritos'},
+  {n:'Cusco',       lat:-13.53,lng:-71.97, i:74, p:'380k', d:'112 distritos'},
+  {n:'Madre de Dios',lat:-11.77,lng:-70.28,i:38, p:'55k',  d:'11 distritos'},
+  {n:'Puno',        lat:-15.00,lng:-70.00, i:47, p:'350k', d:'110 distritos'},
+  {n:'Arequipa',    lat:-15.83,lng:-72.15, i:78, p:'370k', d:'109 distritos'},
+  {n:'Moquegua',    lat:-16.79,lng:-70.91, i:61, p:'65k',  d:'20 distritos'},
+  {n:'Tacna',       lat:-17.91,lng:-70.26, i:66, p:'95k',  d:'28 distritos'},
 ];
 function color(i){return i>=70?'#10B981':i>=45?'#FCD34D':'#FCA5A5';}
-function selectReg(r,el){
-  document.querySelectorAll('.map-region').forEach(x=>x.classList.remove('sel'));
-  if(el) el.classList.add('sel');
+
+let _leafletMap=null, _markers=[];
+function selectReg(r){
   document.getElementById('reg-name').textContent=r.n;
   document.getElementById('reg-meta').textContent=`${r.p} jóvenes 15-29 · ${r.d}`;
   document.getElementById('reg-iacj').textContent=r.i+'/100';
   document.getElementById('reg-br').textContent=Math.max(15,90-r.i)+'%';
   document.getElementById('reg-rg').textContent=(Math.round(r.i*180+1000)).toLocaleString('es-PE');
   document.getElementById('reg-in').textContent=Math.round(r.i*0.9);
+  _markers.forEach(({circle,reg})=>{
+    const sel=reg.n===r.n;
+    circle.setStyle({fillOpacity:sel?1:.65,weight:sel?3:1,color:sel?'#fff':'rgba(255,255,255,.3)'});
+    if(sel) circle.bringToFront();
+  });
 }
 function buildMap(){
-  const svg=document.querySelector('#peruMap g');
-  svg.innerHTML = regions.map(r=>`<path class="map-region" d="${r.path}" fill="${color(r.i)}" data-reg="${r.n}"/>`).join('') + `
-    <text x="78" y="92" font-size="9" fill="#374151">Piura</text>
-    <text x="100" y="170" font-size="9" fill="#fff">La Libertad</text>
-    <text x="270" y="110" font-size="11" fill="#fff" font-weight="700">LORETO</text>
-    <text x="115" y="285" font-size="12" fill="#fff" font-weight="800">LIMA</text>
-    <text x="260" y="385" font-size="9" fill="#fff">Cusco</text>
-    <text x="225" y="455" font-size="9" fill="#fff">Arequipa</text>
-    <text x="318" y="445" font-size="9" fill="#374151">Puno</text>
-  `;
-  svg.querySelectorAll('.map-region').forEach(p=>{
-    const r=regions.find(x=>x.n===p.dataset.reg);
-    p.addEventListener('click',()=>selectReg(r,p));
+  if(_leafletMap){_leafletMap.invalidateSize();return;}
+  _leafletMap=L.map('leaflet-map',{center:[-9.5,-75.5],zoom:5,scrollWheelZoom:false});
+  // CartoDB Dark base tiles
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains:'abcd',maxZoom:12
+  }).addTo(_leafletMap);
+  // Labels on top
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{
+    subdomains:'abcd',maxZoom:12,pane:'shadowPane'
+  }).addTo(_leafletMap);
+  // Region circles
+  regions.forEach(r=>{
+    const radius=10+(r.i/100)*24;
+    const circle=L.circleMarker([r.lat,r.lng],{
+      radius,fillColor:color(r.i),color:'rgba(255,255,255,.3)',
+      weight:1,fillOpacity:.65
+    });
+    circle.bindTooltip(
+      `<b style="font-size:14px;">${r.n}</b><br>` +
+      `IACJ: <b style="color:${color(r.i)}">${r.i}/100</b><br>` +
+      `${r.p} jóvenes · ${r.d}`,
+      {direction:'top',className:'lf-tooltip',sticky:false}
+    );
+    circle.on('click',()=>selectReg(r));
+    circle.addTo(_leafletMap);
+    _markers.push({circle,reg:r});
   });
   // default
-  const ay=regions.find(r=>r.n==='Ayacucho');
-  selectReg(ay,svg.querySelector('[data-reg="Ayacucho"]'));
+  selectReg(regions.find(r=>r.n==='Ayacucho'));
 }
 
 // ---------- Navigation ----------
@@ -450,7 +474,7 @@ function show(v){
   document.querySelectorAll('.side-item').forEach(e=>e.classList.remove('on'));
   event && event.currentTarget && event.currentTarget.classList.add('on');
   document.getElementById('view-title').textContent = {dashboard:'Dashboard',mapa:'Mapa interactivo',iniciativas:'Iniciativas',alertas:'Alertas IA',patrocinio:'Patrocinios BCP',consultas:'Consultas públicas',esg:'Reporte ESG',opendata:'Open Data'}[v];
-  if(v==='mapa') setTimeout(buildMap,0);
+  if(v==='mapa') setTimeout(()=>{buildMap(); if(_leafletMap)_leafletMap.invalidateSize();},80);
   if(v==='mapa' && !window._chTR){window._chTR=new Chart(document.getElementById('chTemaReg'),{type:'doughnut',data:{labels:['Ambiente','Educación','Cultura','Salud','Emprend.'],datasets:[{data:[34,22,18,14,12],backgroundColor:['#10B981','#3B82F6','#7C3AED','#EC4899','#F59E0B']}]},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9}}}}}})}
   if(v==='patrocinio' && !window._chP){
     window._chP = new Chart(document.getElementById('chPatro'),{type:'bar',data:{labels:['Ambiente','Educación','Cultura','Emprend.','Salud mental','Movilidad','Otros'],datasets:[{label:'S/ invertido',data:[92000,78000,54000,68000,42000,30000,24200],backgroundColor:'#E11D2E'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
