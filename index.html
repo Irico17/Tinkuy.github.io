@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tinkuy · El encuentro de una generación</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html{scroll-behavior:smooth;}
+  body{background:#fff;}
+  /* Sticky nav */
+  .navbar{position:sticky;top:0;z-index:80;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .navbar a.nav-link{color:#374151;text-decoration:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:8px;}
+  .navbar a.nav-link:hover{background:#F3F4F6;color:#E11D2E;}
+  .nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+
+  /* Sections */
+  section{padding:80px 24px;}
+  .container{max-width:1200px;margin:0 auto;}
+  .section-tag{display:inline-block;background:#FEE2E2;color:#B91C1C;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;}
+  .section-tag.blue{background:#DBEAFE;color:#1E40AF;}
+  .section-tag.green{background:#D1FAE5;color:#065F46;}
+  .section-tag.purple{background:#EDE9FE;color:#5B21B6;}
+  .section-tag.amber{background:#FEF3C7;color:#92400E;}
+  .section-tag.dark{background:rgba(255,255,255,.15);color:#fff;}
+  h2.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;margin:0 0 10px;letter-spacing:-1px;line-height:1.15;}
+  p.section-lead{font-size:17px;color:#6B7280;max-width:720px;margin:0 0 36px;line-height:1.6;}
+
+  /* HERO */
+  .hero{background:radial-gradient(ellipse at top right,#1F2937 0%,#0B0F19 60%);color:#fff;padding:90px 24px 110px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(225,29,46,.18),transparent 50%),radial-gradient(circle at 80% 20%,rgba(245,158,11,.12),transparent 50%);pointer-events:none;}
+  .hero-content{position:relative;z-index:1;}
+  .hero h1{font-size:clamp(36px,6.5vw,68px);font-weight:900;letter-spacing:-2px;line-height:1.05;margin:24px 0 12px;}
+  .hero h1 .grad-text{background:linear-gradient(90deg,#E11D2E,#F59E0B,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero-pill{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:7px 16px;border-radius:999px;font-size:13px;font-weight:600;}
+  .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px;}
+  .hero-cta .btn-cta{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;transition:transform .15s;}
+  .hero-cta .btn-cta:hover{transform:translateY(-2px);}
+  .btn-cta.primary{background:#fff;color:#E11D2E;}
+  .btn-cta.outline{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.25);}
+
+  /* HOOK BIG STAT */
+  .hook-section{background:#0B0F19;color:#fff;text-align:center;padding:80px 24px;}
+  .hook-num{font-size:clamp(96px,18vw,200px);font-weight:900;line-height:.95;background:linear-gradient(180deg,#E11D2E,#F59E0B);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hook-text{font-size:clamp(22px,3vw,36px);font-weight:800;margin:14px 0 0;max-width:780px;margin-left:auto;margin-right:auto;line-height:1.3;}
+  .hook-source{font-size:13px;color:#6B7280;margin-top:14px;}
+
+  /* PROBLEM CAMILA */
+  .story-section{background:linear-gradient(160deg,#FFF7ED 0%,#FEF3C7 100%);}
+  .camila-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;align-items:center;}
+  @media(max-width:760px){.camila-wrap{grid-template-columns:1fr;}}
+  .camila-avatar{background:#fff;border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 50px rgba(245,158,11,.2);}
+  .camila-avatar .face{width:160px;height:160px;background:linear-gradient(135deg,#F59E0B,#E11D2E);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:78px;}
+  .camila-quote{background:#fff;border-left:5px solid #E11D2E;border-radius:0 14px 14px 0;padding:24px 28px;font-size:17px;line-height:1.7;color:#374151;}
+  .camila-quote .fail{color:#DC2626;font-weight:700;}
+  .camila-quote .win{color:#059669;font-weight:700;}
+
+  /* PROBLEM DATA */
+  .data-section{background:#fff;}
+  .data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+  .data-card{background:#fff;border:1px solid #E5E7EB;border-radius:18px;padding:24px;position:relative;overflow:hidden;}
+  .data-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;}
+  .data-card.red::before{background:#E11D2E;}
+  .data-card.amber::before{background:#F59E0B;}
+  .data-card.purple::before{background:#7C3AED;}
+  .data-card.pink::before{background:#EC4899;}
+  .data-card .num{font-size:54px;font-weight:900;line-height:1;}
+  .data-card .lbl{font-size:14px;color:#374151;font-weight:600;margin-top:8px;}
+  .data-card .src{font-size:11px;color:#9CA3AF;margin-top:6px;}
+
+  /* SOLUTION INTRO */
+  .sol-section{background:linear-gradient(135deg,#E11D2E 0%,#F59E0B 50%,#0E9F6E 100%);color:#fff;text-align:center;padding:100px 24px;}
+  .sol-section h2{color:#fff;}
+  .sol-section .quechua{font-size:18px;letter-spacing:6px;font-weight:600;opacity:.85;text-transform:uppercase;margin:8px 0 24px;}
+  .sol-name{font-size:clamp(60px,12vw,140px);font-weight:900;letter-spacing:-3px;line-height:1;}
+  .sol-tagline{font-size:clamp(16px,2vw,22px);max-width:760px;margin:24px auto 0;opacity:.92;line-height:1.5;}
+
+  /* PRODUCT CARDS */
+  .products-section{background:#F9FAFB;}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;}
+  .product-card{background:#fff;border-radius:20px;padding:28px;text-decoration:none;color:#111827;display:flex;flex-direction:column;border:1px solid #E5E7EB;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;}
+  .product-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.1);}
+  .product-card .pico{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:18px;}
+  .product-card h3{font-size:22px;font-weight:800;margin:0 0 8px;}
+  .product-card p{font-size:14px;color:#6B7280;margin:0 0 14px;line-height:1.55;flex:1;}
+  .product-card .features{font-size:12px;color:#374151;line-height:1.7;margin-bottom:16px;}
+  .product-card .features li{list-style:none;padding-left:18px;position:relative;}
+  .product-card .features li::before{content:"✓";position:absolute;left:0;color:#10B981;font-weight:700;}
+  .product-card .open-btn{display:inline-flex;align-items:center;gap:6px;background:#0B0F19;color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;font-size:13px;align-self:flex-start;}
+  .product-card.amber .pico{background:#FEF3C7;}
+  .product-card.blue .pico{background:#DBEAFE;}
+  .product-card.purple .pico{background:#EDE9FE;}
+  .product-card.green .pico{background:#D1FAE5;}
+
+  /* SURVEY */
+  .survey-section{background:#fff;}
+  .survey-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+  .survey-card{background:linear-gradient(135deg,#F9FAFB,#fff);border:1px solid #E5E7EB;border-radius:18px;padding:24px;text-align:center;}
+  .survey-card .pct{font-size:50px;font-weight:900;line-height:1;}
+  .survey-card .q{font-size:13px;color:#374151;font-weight:600;margin-top:10px;line-height:1.4;}
+  .survey-meta{background:#F0FDF4;border:1px dashed #86EFAC;border-radius:14px;padding:14px 18px;font-size:13px;color:#065F46;text-align:center;margin-top:24px;}
+
+  /* BCP VALUE */
+  .bcp-section{background:#0B0F19;color:#fff;}
+  .bcp-section h2{color:#fff;}
+  .bcp-section .section-lead{color:#9CA3AF;}
+  .bcp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+  .bcp-card-d{background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:24px;}
+  .bcp-card-d .em{font-size:36px;margin-bottom:10px;}
+  .bcp-card-d h4{margin:0 0 6px;font-size:17px;color:#fff;}
+  .bcp-card-d p{font-size:13px;color:#9CA3AF;margin:0;line-height:1.5;}
+
+  /* KPIs */
+  .kpi-section{background:linear-gradient(135deg,#4C1D95 0%,#7C3AED 100%);color:#fff;}
+  .kpi-section h2{color:#fff;}
+  .kpi-section .section-lead{color:rgba(255,255,255,.85);}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;}
+  .kpi-card-p{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:24px;}
+  .kpi-card-p .v{font-size:42px;font-weight:900;line-height:1;color:#fff;}
+  .kpi-card-p .l{font-size:12px;opacity:.85;margin-top:8px;line-height:1.4;}
+  .kpi-card-p.highlight{background:rgba(252,211,77,.15);border-color:rgba(252,211,77,.4);}
+  .kpi-card-p.highlight .v{color:#FCD34D;}
+
+  /* ROADMAP */
+  .roadmap-section{background:#fff;}
+  .roadmap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;position:relative;}
+  .rm-step{padding:24px;background:#F9FAFB;border-radius:16px;margin:6px;position:relative;border:1px solid #E5E7EB;}
+  .rm-step .ph{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;margin-bottom:10px;}
+  .rm-step.s1 .ph{background:#FEE2E2;color:#B91C1C;}
+  .rm-step.s2 .ph{background:#FEF3C7;color:#92400E;}
+  .rm-step.s3 .ph{background:#D1FAE5;color:#065F46;}
+  .rm-step.s4 .ph{background:#EDE9FE;color:#5B21B6;}
+  .rm-step h4{margin:0 0 6px;font-size:18px;}
+  .rm-step p{margin:0;font-size:13px;color:#6B7280;line-height:1.5;}
+
+  /* ARCH */
+  .arch-section{background:#F9FAFB;}
+  .arch-box{background:#0B0F19;border-radius:18px;padding:24px;overflow-x:auto;}
+  .arch-box pre{font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;line-height:1.7;margin:0;color:#D1D5DB;}
+
+  /* FINAL CTA */
+  .closing-section{background:linear-gradient(135deg,#E11D2E 0%,#F59E0B 50%,#0E9F6E 100%);color:#fff;text-align:center;padding:90px 24px;}
+  .closing-section h2{color:#fff;font-size:clamp(32px,5vw,52px);}
+  .closing-section p{font-size:18px;opacity:.92;max-width:680px;margin:18px auto 30px;line-height:1.5;}
+
+  /* Floating arrow scroll indicator */
+  .scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:13px;animation:bounce 2s infinite;}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}}
+
+  footer{background:#0B0F19;color:#9CA3AF;padding:40px 24px;text-align:center;font-size:12px;}
+</style>
+</head>
+<body>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="navbar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="width:32px;height:32px;border-radius:9px;" class="brand-grad"></div>
+    <b style="font-size:15px;">Tinkuy</b>
+    <span style="color:#9CA3AF;font-size:12px;display:none;" class="hide-mobile">· Reto BCP #2</span>
+  </div>
+  <div class="nav-links">
+    <a href="#hook" class="nav-link">🪝 Problema</a>
+    <a href="#solucion" class="nav-link">💡 Solución</a>
+    <a href="#productos" class="nav-link">🛠️ Productos</a>
+    <a href="#validacion" class="nav-link">✅ Validación</a>
+    <a href="#bcp" class="nav-link">💎 Por qué BCP</a>
+    <a href="#impacto" class="nav-link">📈 Impacto</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-pill">🇵🇪 Reto BCP #2 — Hackathon 2026</div>
+    <h1>El encuentro de una generación<br>con su <span class="grad-text">país</span></h1>
+    <p style="font-size:18px;opacity:.85;max-width:740px;margin:14px auto 0;">Plataforma cívica nacional para que <b>8.4 millones de jóvenes peruanos</b> participen, decidan y transformen sus comunidades.</p>
+    <div class="hero-cta">
+      <a href="#hook" class="btn-cta primary">▼ Empezar recorrido</a>
+      <a href="#productos" class="btn-cta outline">🛠️ Ver productos</a>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ Desliza</div>
+</header>
+
+<!-- ============ HOOK ============ -->
+<section id="hook" class="hook-section">
+  <div class="container">
+    <div class="hero-pill" style="background:rgba(225,29,46,.2);border-color:rgba(225,29,46,.4);">El problema</div>
+    <div class="hook-num">9 de 10</div>
+    <p class="hook-text">jóvenes peruanos <span style="color:#E11D2E;">nunca</span> participaron en una iniciativa comunitaria.</p>
+    <p class="hook-source">ENAJUV / SENAJU 2022 · 8.4M jóvenes 15-29 — INEI</p>
+  </div>
+</section>
+
+<!-- ============ CAMILA ============ -->
+<section class="story-section">
+  <div class="container">
+    <div class="section-tag amber">Historia real</div>
+    <h2 class="section-title">Conozcan a <span style="color:#E11D2E;">Camila</span>. 19 años, Cusco.</h2>
+    <p class="section-lead">No es que los jóvenes no quieran participar. Es que <b>no encuentran cómo</b>.</p>
+
+    <div class="camila-wrap">
+      <div class="camila-avatar">
+        <div class="face">👩🏽‍🎓</div>
+        <b style="font-size:18px;">Camila R.</b>
+        <div style="font-size:13px;color:#6B7280;margin-top:4px;">19 años · Cusco · Turismo</div>
+        <div style="margin-top:14px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;">
+          <span class="badge badge-green">Activa</span>
+          <span class="badge badge-amber">Sin canales</span>
+        </div>
+      </div>
+
+      <div class="camila-quote">
+        Camila quiere organizar una <b>jornada de reforestación</b> en las laderas de Sacsayhuamán con sus amigos.
+        <br><br>
+        📱 Crea un grupo de WhatsApp. <span class="fail">Solo entran 5 personas.</span><br>
+        🏛️ Va a la municipalidad. <span class="fail">"Vuelva la próxima semana."</span><br>
+        📸 Publica en Instagram. <span class="fail">3 likes.</span>
+        <br><br>
+        <b style="color:#0B0F19;">Termina rindiéndose.</b>
+        <br><br>
+        <span style="font-size:14px;color:#6B7280;">Como Camila, hay <b style="color:#E11D2E;">7.5 millones</b> de jóvenes rindiéndose ahora mismo.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DATA ============ -->
+<section id="data" class="data-section">
+  <div class="container">
+    <div class="section-tag">Una crisis estructural</div>
+    <h2 class="section-title">No es un problema de Camila. Es de todos.</h2>
+    <p class="section-lead">Cuatro datos que explican por qué el Perú no puede seguir esperando.</p>
+
+    <div class="data-grid">
+      <div class="data-card red">
+        <div class="num" style="color:#E11D2E;">88%</div>
+        <div class="lbl">de jóvenes nunca participó en una iniciativa comunitaria</div>
+        <div class="src">ENAJUV / SENAJU 2022</div>
+      </div>
+      <div class="data-card amber">
+        <div class="num" style="color:#F59E0B;">60%</div>
+        <div class="lbl">sin internet constante en zonas rurales</div>
+        <div class="src">INEI · ENAHO 2023</div>
+      </div>
+      <div class="data-card purple">
+        <div class="num" style="color:#7C3AED;">&lt;10%</div>
+        <div class="lbl">de jóvenes confía en los partidos políticos</div>
+        <div class="src">Latinobarómetro 2023</div>
+      </div>
+      <div class="data-card pink">
+        <div class="num" style="color:#EC4899;">30%</div>
+        <div class="lbl">presenta síntomas de ansiedad o depresión</div>
+        <div class="src">MINSA 2022</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOLUTION INTRO ============ -->
+<section id="solucion" class="sol-section">
+  <div class="container">
+    <div style="font-size:80px;margin-bottom:8px;">🤝</div>
+    <div class="quechua">quechua: encuentro</div>
+    <div class="sol-name">Tinkuy</div>
+    <p class="sol-tagline">
+      El primer ecosistema cívico digital para jóvenes peruanos,<br>
+      <b>respaldado por el BCP y verificado por el Estado.</b>
+    </p>
+    <p style="margin-top:16px;font-size:14px;opacity:.7;">Una identidad. Una conversación. <b>Cero jóvenes excluidos.</b></p>
+  </div>
+</section>
+
+<!-- ============ PRODUCTS ============ -->
+<section id="productos" class="products-section">
+  <div class="container">
+    <div class="section-tag blue">Tres productos · un solo ecosistema</div>
+    <h2 class="section-title">Explora el sistema completo</h2>
+    <p class="section-lead">Cada producto es un mockup navegable. Haz clic en cualquiera para abrirlo en una pestaña nueva y explorar todas sus pantallas.</p>
+
+    <div class="products-grid">
+      <a href="app.html" class="product-card amber">
+        <div class="pico">📱</div>
+        <h3>Tinkuy App</h3>
+        <p>Para los <b>8.4M jóvenes</b>. La app móvil con identidad RENIEC verificada.</p>
+        <ul class="features">
+          <li>Login con DNI + selfie liveness</li>
+          <li>Mapa de iniciativas y eventos</li>
+          <li>Voz Pública: votar consultas oficiales</li>
+          <li>Karma Cívico → becas, Yape, BCP</li>
+          <li>Cuídate: psicólogos 24/7 gratis</li>
+        </ul>
+        <span class="open-btn">📱 Abrir 25 pantallas →</span>
+      </a>
+
+      <a href="mapa.html" class="product-card blue">
+        <div class="pico">🗺️</div>
+        <h3>Tinkuy Mapa</h3>
+        <p>Para <b>BCP, SENAJU, ministerios y municipios</b>. El observatorio nacional de la juventud.</p>
+        <ul class="features">
+          <li>Mapa interactivo de 1 874 distritos</li>
+          <li>Índice de Actividad Cívica Juvenil (IACJ)</li>
+          <li>Alertas IA priorizadas</li>
+          <li>Reporte ESG automático</li>
+          <li>Open Data CC BY 4.0</li>
+        </ul>
+        <span class="open-btn">🗺️ Abrir Panel BCP →</span>
+      </a>
+
+      <a href="aliado.html" class="product-card purple">
+        <div class="pico">🏛️</div>
+        <h3>Panel Aliado</h3>
+        <p>Para <b>municipios, empresas y ONGs</b>. Lanzan consultas oficiales y patrocinan iniciativas.</p>
+        <ul class="features">
+          <li>Login institucional vía PIDE</li>
+          <li>Wizard de consulta pública</li>
+          <li>Resultados en vivo + demografía</li>
+          <li>Patrocinar iniciativas juveniles</li>
+          <li>Reporte de impacto + Sello Tinkuy</li>
+        </ul>
+        <span class="open-btn">🏛️ Abrir Panel →</span>
+      </a>
+
+      <a href="conecta.html" class="product-card green">
+        <div class="pico">📡</div>
+        <h3>Tinkuy Conecta</h3>
+        <p>Para los <b>60% rurales sin internet</b>. Participación cívica offline en 4 canales.</p>
+        <ul class="features">
+          <li>SMS / USSD *789# (gratuito)</li>
+          <li>IVR en quechua, aymara, castellano</li>
+          <li>524 Tambos MIDIS con tablets</li>
+          <li>38 radios comunitarias aliadas</li>
+          <li>Nokia interactivo demo ✨</li>
+        </ul>
+        <span class="open-btn">📡 Abrir Conecta →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="arch-section">
+  <div class="container">
+    <div class="section-tag">Bajo el capó</div>
+    <h2 class="section-title">Arquitectura del sistema</h2>
+    <p class="section-lead">Una sola identidad, una sola data, todos los canales conectados.</p>
+    <div class="arch-box">
+<pre>
+                    ┌──────────────────────────────────────┐
+                    │   🗺️ TINKUY MAPA (Panel B2G/B2B)    │
+                    │  BCP · SENAJU · MINEDU · Municipios  │
+                    │  → KPIs · Alertas IA · ESG · Open    │
+                    └──────────────┬───────────────────────┘
+                                   │
+        ┌──────────────────────────┴──────────────────────────┐
+        │           🔧 TINKUY CORE (API + Data Lake)          │
+        │   Identidad RENIEC · Geo · ML · Notificaciones      │
+        │   Cifrado AES-256 · Cumplimiento Ley 29733 PDP      │
+        └─┬───────────────────┬───────────────────────────┬───┘
+          │                   │                           │
+   ┌──────▼──────┐  ┌─────────▼─────────┐  ┌──────────────▼──────────────┐
+   │ 📱 APP/WEB   │  │ 📡 TINKUY CONECTA │  │  🏛️ PANEL ALIADO            │
+   │ Jóvenes      │  │ SMS · IVR · IVR   │  │  Municipios · ONGs · BCP    │
+   │ 15-29        │  │ Tambos · Radios   │  │  Consultas · Patrocinios    │
+   └──────────────┘  └───────────────────┘  └─────────────────────────────┘
+
+  Integraciones: RENIEC · Yape · SUNEDU · ONPE · MIDIS · MINSA · gob.pe
+</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SURVEY ============ -->
+<section id="validacion" class="survey-section">
+  <div class="container">
+    <div class="section-tag green">Validación con jóvenes reales</div>
+    <h2 class="section-title">No estamos adivinando.<br><span style="color:#0E9F6E;">Ellos nos lo pidieron.</span></h2>
+    <p class="section-lead">Encuestamos a <b>412 jóvenes peruanos</b> de 15-29 años. Los resultados fueron contundentes.</p>
+
+    <div class="survey-grid">
+      <div class="survey-card"><div class="pct" style="color:#0E9F6E;">87%</div><div class="q">"Usaría una app cívica con verificación DNI"</div></div>
+      <div class="survey-card"><div class="pct" style="color:#1E40AF;">79%</div><div class="q">"Confiaría más si el login es oficial RENIEC"</div></div>
+      <div class="survey-card"><div class="pct" style="color:#F59E0B;">82%</div><div class="q">"Me motivaría un sistema de Karma Cívico"</div></div>
+      <div class="survey-card"><div class="pct" style="color:#E11D2E;">91%</div><div class="q">"Es clave acceder a apoyo psicológico gratuito"</div></div>
+      <div class="survey-card"><div class="pct" style="color:#7C3AED;">84%</div><div class="q">"Votaría en consultas oficiales del Estado"</div></div>
+    </div>
+
+    <div class="survey-meta">
+      📊 <b>Metodología:</b> n=412 · UNI · UNMSM · PUCP · UNSAAC · UNAP · 18 distritos · abril 2026 · margen de error ±4.8%
+    </div>
+  </div>
+</section>
+
+<!-- ============ BCP VALUE ============ -->
+<section id="bcp" class="bcp-section">
+  <div class="container">
+    <div class="section-tag dark">💎 Diferencial</div>
+    <h2 class="section-title">Por qué <span style="color:#E11D2E;">solo el BCP</span> puede liderar esto</h2>
+    <p class="section-lead">Esto no es filantropía. Es posicionamiento estratégico ESG con <b style="color:#fff;">ROI social medible de 5.8×</b>.</p>
+
+    <div class="bcp-grid">
+      <div class="bcp-card-d">
+        <div class="em">💳</div>
+        <h4>Yape · 15M usuarios</h4>
+        <p>Billetera cívica + canje Karma. Adopción instantánea + data de comportamiento financiero juvenil.</p>
+      </div>
+      <div class="bcp-card-d">
+        <div class="em">🏧</div>
+        <h4>Red nacional de agencias</h4>
+        <p>Verificación presencial y capacitación en los 1 874 distritos del Perú. Ningún competidor lo tiene.</p>
+      </div>
+      <div class="bcp-card-d">
+        <div class="em">🤝</div>
+        <h4>Confianza institucional</h4>
+        <p>La que los partidos políticos perdieron (&lt;10% de confianza). Necesaria para que los votos cívicos sean legítimos.</p>
+      </div>
+      <div class="bcp-card-d">
+        <div class="em">📈</div>
+        <h4>Músculo ESG maduro</h4>
+        <p>Inversión social RSE con reporte ESG automático para Junta Directiva. ODS 4, 5, 10, 16, 17 cubiertos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KPIs ============ -->
+<section id="impacto" class="kpi-section">
+  <div class="container">
+    <div class="section-tag dark">📈 Impacto proyectado · Año 1</div>
+    <h2 class="section-title">Con S/ 1.2M del BCP llegamos a…</h2>
+    <p class="section-lead">Costo por joven alcanzado: <b style="color:#FCD34D;">S/ 1.50</b>. Imposible más eficiente.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card-p"><div class="v">800K</div><div class="l">jóvenes verificados RENIEC (10% del universo)</div></div>
+      <div class="kpi-card-p"><div class="v">+500</div><div class="l">distritos activos de 1 874</div></div>
+      <div class="kpi-card-p"><div class="v">+3K</div><div class="l">iniciativas comunitarias ejecutadas</div></div>
+      <div class="kpi-card-p"><div class="v">+150</div><div class="l">consultas públicas vinculantes</div></div>
+      <div class="kpi-card-p"><div class="v">-5pp</div><div class="l">brecha digital juvenil (INEI)</div></div>
+      <div class="kpi-card-p highlight"><div class="v">5.8×</div><div class="l">ROI social (SROI metodología B-Lab)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="roadmap-section">
+  <div class="container">
+    <div class="section-tag purple">🚀 Esto recién empieza</div>
+    <h2 class="section-title">Próximos pasos</h2>
+    <p class="section-lead">Tinkuy es la infraestructura cívica que el Perú no tiene. Después del MVP, viene mucho más.</p>
+
+    <div class="roadmap-grid">
+      <div class="rm-step s1">
+        <span class="ph">MVP · Mes 1-6</span>
+        <h4>Piloto Lima + Cusco</h4>
+        <p>App · Mapa BCP · 2 municipios piloto · 50 mil jóvenes verificados</p>
+      </div>
+      <div class="rm-step s2">
+        <span class="ph">Escala · Año 1</span>
+        <h4>Despliegue nacional + Conecta</h4>
+        <p>SMS *789# · IVR quechua/aymara · Tambos MIDIS · 800K jóvenes</p>
+      </div>
+      <div class="rm-step s3">
+        <span class="ph">Madurez · Año 2</span>
+        <h4>Voto facultativo desde los 16</h4>
+        <p>Integración ONPE · 12 lenguas originarias · DAO juvenil presupuestos participativos</p>
+      </div>
+      <div class="rm-step s4">
+        <span class="ph">Expansión · Año 3</span>
+        <h4>Alianza del Pacífico</h4>
+        <p>México · Colombia · Chile · Fondo S/10M cofinanciado con cooperación internacional</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="closing-section">
+  <div style="font-size:64px;margin-bottom:12px;">🤝</div>
+  <h2>Tinkuy</h2>
+  <p>Porque cuando los jóvenes encuentran cómo participar,<br><b>el Perú encuentra cómo cambiar.</b></p>
+  <div class="hero-cta">
+    <a href="app.html" class="btn-cta primary">📱 Probar la App</a>
+    <a href="mapa.html" class="btn-cta outline">🗺️ Panel BCP</a>
+    <a href="aliado.html" class="btn-cta outline">🏛️ Panel Aliado</a>
+    <a href="conecta.html" class="btn-cta outline">📡 Conecta offline</a>
+  </div>
+  <p style="margin-top:30px;font-size:13px;opacity:.7;font-style:italic;">"Tinkunakusun, Perú joven." — Equipo Tinkuy · Reto BCP #2 · 2026</p>
+</section>
+
+<footer>
+  Tinkuy · Mockup interactivo · Reto BCP #2 — Hackathon 2026<br>
+  Fuentes: INEI · SENAJU · MINSA · ENAHO 2023 · Latinobarómetro 2023
+</footer>
+
+</body>
+</html>

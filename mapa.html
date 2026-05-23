@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tinkuy Mapa · Panel BCP</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{background:#F3F4F6;}
+  .layout{display:flex;min-height:100vh;}
+  .main{flex:1;min-width:0;}
+  .view{display:none;padding:24px;}
+  .view.on{display:block;}
+  .alert-row{display:flex;gap:12px;padding:14px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;border-left:4px solid #F59E0B;margin-bottom:8px;}
+  .grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 12px 18px;">
+      <div style="width:34px;height:34px;border-radius:10px;" class="brand-grad"></div>
+      <div><div style="color:#fff;font-weight:800;">Tinkuy</div><div style="font-size:10px;">Panel BCP · SENAJU</div></div>
+    </div>
+    <div class="side-item on" onclick="show('dashboard')">📊 Dashboard</div>
+    <div class="side-item" onclick="show('mapa')">🗺️ Mapa interactivo</div>
+    <div class="side-item" onclick="show('iniciativas')">🎯 Iniciativas</div>
+    <div class="side-item" onclick="show('alertas')">🚨 Alertas IA <span style="margin-left:auto;background:#E11D2E;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;">7</span></div>
+    <div class="side-item" onclick="show('patrocinio')">💰 Patrocinios BCP</div>
+    <div class="side-item" onclick="show('consultas')">🗳️ Consultas públicas</div>
+    <div class="side-item" onclick="show('esg')">📈 Reporte ESG</div>
+    <div class="side-item" onclick="show('opendata')">📂 Open Data</div>
+    <div style="margin-top:24px;padding:12px;background:#1F2937;border-radius:10px;font-size:11px;color:#9CA3AF;">
+      <div style="display:flex;justify-content:space-between;"><b style="color:#fff;">Costo evitado</b></div>
+      <div style="font-size:22px;font-weight:800;color:#10B981;margin-top:4px;">S/ 2.4 M</div>
+      <div>Estado en eventos cancelados o duplicados (proyectado año 1)</div>
+    </div>
+    <div style="margin-top:auto;position:absolute;bottom:18px;left:12px;right:12px;display:flex;gap:10px;align-items:center;color:#fff;font-size:12px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:#E11D2E;display:flex;align-items:center;justify-content:center;font-weight:700;">RS</div>
+      <div><b>RSE BCP</b><div style="font-size:10px;color:#9CA3AF;">Rodrigo S.</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 style="margin:0;font-size:22px;font-weight:800;" id="view-title">Dashboard</h1>
+        <p style="margin:0;font-size:12px;color:#6B7280;">Observatorio Nacional de la Juventud · datos al 23 may 2026</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <a href="index.html" onclick="history.back();return false;" class="btn btn-ghost btn-sm">← Hub</a>
+        <button class="btn btn-ghost btn-sm">⬇️ Exportar PDF</button>
+        <button class="btn btn-primary btn-sm">⚙️ Configurar</button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section class="view on" id="v-dashboard">
+      <!-- KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px;">
+        <div class="kpi"><div class="l">Jóvenes registrados</div><div class="v">487 312</div><div class="d" style="color:#0E9F6E;">▲ 12% MoM</div></div>
+        <div class="kpi"><div class="l">% del universo (8.4M)</div><div class="v brand-text">5.8 %</div><div class="d" style="color:#6B7280;">Meta año 1 ✓</div></div>
+        <div class="kpi"><div class="l">Iniciativas activas</div><div class="v">3 421</div><div class="d" style="color:#0E9F6E;">▲ 28% MoM</div></div>
+        <div class="kpi"><div class="l">Distritos activos</div><div class="v">312<span style="font-size:14px;color:#9CA3AF;"> /1874</span></div><div class="d" style="color:#6B7280;">Cobertura 16.6%</div></div>
+        <div class="kpi"><div class="l">Votos en consultas</div><div class="v">28 410</div><div class="d" style="color:#0E9F6E;">▲ 41% MoM</div></div>
+        <div class="kpi"><div class="l">Brecha digital juvenil</div><div class="v" style="color:#E11D2E;">42%</div><div class="d" style="color:#0E9F6E;">▼ -3 pp (mejora)</div></div>
+      </div>
+
+      <!-- Charts -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px;">
+        <div class="card">
+          <h3 style="margin:0 0 6px;">📈 Participación mensual (Perú)</h3>
+          <p style="font-size:11px;color:#6B7280;margin:0 0 12px;">Eventos creados, votos y nuevos registros</p>
+          <canvas id="chMonth" height="80"></canvas>
+        </div>
+        <div class="card">
+          <h3 style="margin:0 0 6px;">🎯 Iniciativas por tema</h3>
+          <canvas id="chTema" height="120"></canvas>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+        <div class="card">
+          <h3 style="margin:0 0 6px;">🗳️ Top regiones por IACJ</h3>
+          <canvas id="chReg" height="160"></canvas>
+        </div>
+        <div class="card">
+          <h3 style="margin:0 0 6px;">📡 Brecha digital juvenil — comparativo</h3>
+          <canvas id="chBrecha" height="160"></canvas>
+        </div>
+      </div>
+
+      <!-- Live activity -->
+      <div class="card">
+        <h3 style="margin:0 0 12px;">⚡ Actividad en vivo</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+          <div style="display:flex;gap:10px;align-items:center;"><span class="dot pulse" style="background:#0E9F6E;"></span><span>Camila R. (Cusco) creó iniciativa <b>"Conversatorio cambio climático"</b></span><span style="margin-left:auto;color:#9CA3AF;font-size:11px;">hace 2 min</span></div>
+          <div style="display:flex;gap:10px;align-items:center;"><span class="dot pulse" style="background:#1E40AF;"></span><span>Consulta MINEDU alcanzó <b>12 000 votos</b> verificados</span><span style="margin-left:auto;color:#9CA3AF;font-size:11px;">hace 5 min</span></div>
+          <div style="display:flex;gap:10px;align-items:center;"><span class="dot pulse" style="background:#F59E0B;"></span><span>BCP desembolsó <b>S/ 2 500</b> a iniciativa "Taller robótica" (Puno)</span><span style="margin-left:auto;color:#9CA3AF;font-size:11px;">hace 18 min</span></div>
+          <div style="display:flex;gap:10px;align-items:center;"><span class="dot pulse" style="background:#7C3AED;"></span><span>Tambo Putumayo registró <b>3 nuevos jóvenes</b> vía SMS</span><span style="margin-left:auto;color:#9CA3AF;font-size:11px;">hace 22 min</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAPA -->
+    <section class="view" id="v-mapa">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <span class="chip on">Todo el Perú</span><span class="chip">Costa</span><span class="chip">Sierra</span><span class="chip">Selva</span>
+        <span style="margin-left:auto;"></span>
+        <span class="chip on">IACJ</span><span class="chip">Brecha digital</span><span class="chip">Registrados</span><span class="chip">Eventos</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <h3 style="margin:0;">🗺️ Índice de Actividad Cívica Juvenil (IACJ)</h3>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;">
+              <span style="width:14px;height:14px;background:#FCA5A5;border-radius:3px;"></span>Bajo
+              <span style="width:14px;height:14px;background:#FCD34D;border-radius:3px;"></span>Medio
+              <span style="width:14px;height:14px;background:#10B981;border-radius:3px;"></span>Alto
+            </div>
+          </div>
+          <svg viewBox="0 0 400 500" style="width:100%;height:520px;" id="peruMap">
+            <g></g>
+          </svg>
+          <p style="font-size:10px;color:#9CA3AF;font-style:italic;margin:6px 0 0;">* Mapa estilizado. Productivo usará GeoJSON oficial INEI por distrito.</p>
+        </div>
+
+        <div class="card">
+          <p style="font-size:11px;color:#6B7280;font-weight:700;text-transform:uppercase;margin:0;">Región seleccionada</p>
+          <h2 id="reg-name" style="margin:6px 0 2px;font-size:24px;">Ayacucho</h2>
+          <p id="reg-meta" style="font-size:12px;color:#6B7280;margin:0;">200k jóvenes 15-29 · 119 distritos</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+            <div style="background:#FEF3C7;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#92400E;font-weight:700;">IACJ</div><div id="reg-iacj" style="font-size:22px;font-weight:800;color:#92400E;">41/100</div></div>
+            <div style="background:#FEE2E2;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#B91C1C;font-weight:700;">Brecha digital</div><div id="reg-br" style="font-size:22px;font-weight:800;color:#B91C1C;">63%</div></div>
+            <div style="background:#DBEAFE;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#1E40AF;font-weight:700;">Registrados</div><div id="reg-rg" style="font-size:22px;font-weight:800;color:#1E40AF;">8 412</div></div>
+            <div style="background:#D1FAE5;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#065F46;font-weight:700;">Iniciat./mes</div><div id="reg-in" style="font-size:22px;font-weight:800;color:#065F46;">47</div></div>
+          </div>
+
+          <div style="margin-top:14px;background:linear-gradient(135deg,#FEE2E2,#FEF3C7);border:1px solid #FDE68A;border-radius:12px;padding:12px;">
+            <b style="font-size:12px;color:#92400E;">🚨 Alerta de oportunidad</b>
+            <p style="font-size:11px;color:#92400E;margin:6px 0 8px;">Alta motivación cívica + 63% brecha digital. Recomendación: paquete <b>tablets + capacitación</b> ~S/ 50 000.</p>
+            <button class="btn btn-primary btn-xs btn-block">+ Crear propuesta BCP</button>
+          </div>
+
+          <h4 style="margin:14px 0 6px;font-size:12px;">📊 Iniciativas por tema</h4>
+          <canvas id="chTemaReg" height="100"></canvas>
+        </div>
+      </div>
+
+      <!-- Drill-down districts -->
+      <div class="card" style="margin-top:14px;">
+        <h3 style="margin:0 0 10px;">🔍 Drill-down · Distritos de la región (top 10)</h3>
+        <table class="tbl">
+          <thead><tr><th>Distrito</th><th>Jóvenes</th><th>Registrados</th><th>IACJ</th><th>Brecha</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr><td><b>Huamanga</b></td><td>52 100</td><td>3 421 (6.6%)</td><td><span class="badge badge-amber">52</span></td><td>48%</td><td><button class="btn btn-xs btn-ghost">Ver →</button></td></tr>
+            <tr><td>Huanta</td><td>18 230</td><td>982 (5.4%)</td><td><span class="badge badge-amber">44</span></td><td>61%</td><td><button class="btn btn-xs btn-ghost">Ver →</button></td></tr>
+            <tr><td>San Miguel</td><td>9 410</td><td>312 (3.3%)</td><td><span class="badge badge-red">28</span></td><td>72%</td><td><button class="btn btn-xs btn-amber">Patrocinar</button></td></tr>
+            <tr><td>Cangallo</td><td>6 200</td><td>180 (2.9%)</td><td><span class="badge badge-red">24</span></td><td>78%</td><td><button class="btn btn-xs btn-amber">Patrocinar</button></td></tr>
+            <tr><td>Lucanas</td><td>11 800</td><td>421 (3.6%)</td><td><span class="badge badge-amber">38</span></td><td>69%</td><td><button class="btn btn-xs btn-ghost">Ver →</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- INICIATIVAS -->
+    <section class="view" id="v-iniciativas">
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
+        <input class="input" style="max-width:300px;" placeholder="🔍 Buscar iniciativa..."/>
+        <span class="chip on">Todas (3 421)</span>
+        <span class="chip">🌱 Ambiente (892)</span>
+        <span class="chip">📚 Educación (621)</span>
+        <span class="chip">🎭 Cultura (584)</span>
+        <span class="chip">💼 Emprend. (412)</span>
+        <button class="btn btn-primary btn-sm" style="margin-left:auto;">⬇️ CSV</button>
+      </div>
+
+      <div class="card" style="padding:0;">
+        <table class="tbl">
+          <thead><tr><th>Iniciativa</th><th>Categoría</th><th>Líder</th><th>Distrito</th><th>Inscritos</th><th>Estado</th><th>Aliados</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><b>Reforestación Sacsayhuamán</b><br><small style="color:#6B7280;">Creada 12 may</small></td><td><span class="badge badge-green">🌱 Ambiente</span></td><td>Camila R.</td><td>Cusco</td><td>47 / 80</td><td><span class="badge badge-green">● Activa</span></td><td>BCP, SERFOR</td><td><button class="btn btn-xs btn-ghost">Ver</button></td></tr>
+            <tr><td><b>Taller robótica escolares</b></td><td><span class="badge badge-blue">📚 Educación</span></td><td>Diego A.</td><td>Puno</td><td>62 / 60</td><td><span class="badge badge-amber">💰 Financiada</span></td><td>BCP S/ 2 500</td><td><button class="btn btn-xs btn-ghost">Ver</button></td></tr>
+            <tr><td><b>Festival danzas andinas</b></td><td><span class="badge badge-purple">🎭 Cultura</span></td><td>Mariana T.</td><td>Cusco</td><td>132 / 200</td><td><span class="badge badge-green">● Activa</span></td><td>Muni. Cusco</td><td><button class="btn btn-xs btn-ghost">Ver</button></td></tr>
+            <tr><td><b>Carpa salud mental UNI</b></td><td><span class="badge badge-red">🧠 Salud</span></td><td>Sofía Q.</td><td>Lima · Rímac</td><td>284</td><td><span class="badge badge-green">● Activa</span></td><td>MINSA</td><td><button class="btn btn-xs btn-ghost">Ver</button></td></tr>
+            <tr><td><b>Limpieza río Mantaro</b></td><td><span class="badge badge-green">🌱 Ambiente</span></td><td>José L.</td><td>Huancayo</td><td>91 / 100</td><td><span class="badge badge-amber">⏳ Postul. fondo</span></td><td>—</td><td><button class="btn btn-xs btn-amber">Aprobar</button></td></tr>
+            <tr><td><b>Hackathon emprendim. joven</b></td><td><span class="badge badge-amber">💼 Emprend.</span></td><td>Renzo M.</td><td>Arequipa</td><td>340 / 500</td><td><span class="badge badge-green">● Activa</span></td><td>BCP, UTP</td><td><button class="btn btn-xs btn-ghost">Ver</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ALERTAS IA -->
+    <section class="view" id="v-alertas">
+      <p style="color:#6B7280;font-size:13px;margin-top:0;">El motor de IA cruza data INEI + actividad Tinkuy y genera oportunidades priorizadas para BCP y aliados.</p>
+
+      <div class="alert-row" style="border-left-color:#E11D2E;">
+        <div style="font-size:24px;">🔥</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b>Ayacucho · oportunidad alta</b><span class="badge badge-red">PRIORIDAD 1</span></div>
+          <p style="font-size:12px;color:#4B5563;margin:4px 0 8px;">Alta motivación cívica (IACJ 41) + 63% brecha digital. ROI proyectado: 8.4× con inversión ~S/ 50 000.</p>
+          <div style="display:flex;gap:6px;"><button class="btn btn-primary btn-xs">+ Crear propuesta</button><button class="btn btn-ghost btn-xs">Descartar</button></div>
+        </div>
+      </div>
+      <div class="alert-row" style="border-left-color:#F59E0B;">
+        <div style="font-size:24px;">📈</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b>Distrito San Juan de Lurigancho</b><span class="badge badge-amber">PRIORIDAD 2</span></div>
+          <p style="font-size:12px;color:#4B5563;margin:4px 0 8px;">+38% nuevos registros este mes (de 2 100 a 2 901). Momento óptimo para campaña BCP educación financiera.</p>
+          <button class="btn btn-amber btn-xs">+ Campaña ABC del BCP</button>
+        </div>
+      </div>
+      <div class="alert-row" style="border-left-color:#1E40AF;">
+        <div style="font-size:24px;">🗳️</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b>Consulta MINEDU está cerca del quórum</b><span class="badge badge-blue">INFORMATIVA</span></div>
+          <p style="font-size:12px;color:#4B5563;margin:4px 0;">Faltan 2 599 votos para alcanzar 15 000 (umbral de vinculancia). Activación SMS sugerida.</p>
+        </div>
+      </div>
+      <div class="alert-row" style="border-left-color:#7C3AED;">
+        <div style="font-size:24px;">⚠️</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b>Loreto · sub-registro detectado</b><span class="badge badge-purple">DATOS</span></div>
+          <p style="font-size:12px;color:#4B5563;margin:4px 0;">Solo 1.8% de jóvenes registrados vs 8% promedio. Recomendación: incrementar despliegue de Tambos.</p>
+        </div>
+      </div>
+      <div class="alert-row" style="border-left-color:#10B981;">
+        <div style="font-size:24px;">💚</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b>Línea Cuídate · alza en consultas</b><span class="badge badge-green">SALUD MENTAL</span></div>
+          <p style="font-size:12px;color:#4B5563;margin:4px 0;">+62% sesiones de chat psicológico en Lima Metropolitana. Sugerencia: ampliar plantel de psicólogos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PATROCINIOS -->
+    <section class="view" id="v-patrocinio">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
+        <div class="kpi"><div class="l">Inversión total YTD</div><div class="v" style="color:#E11D2E;">S/ 348 200</div><div class="d" style="color:#6B7280;">Presupuesto 2026: S/ 1.2 M</div></div>
+        <div class="kpi"><div class="l">Iniciativas financiadas</div><div class="v">142</div><div class="d" style="color:#0E9F6E;">▲ 21 este mes</div></div>
+        <div class="kpi"><div class="l">Jóvenes impactados</div><div class="v">18 421</div><div class="d" style="color:#6B7280;">Promedio 130/iniciativa</div></div>
+        <div class="kpi"><div class="l">ROI social estimado</div><div class="v" style="color:#0E9F6E;">5.8×</div><div class="d" style="color:#6B7280;">SROI metodología B-Lab</div></div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="margin:0;">💰 Solicitudes en cola</h3>
+          <button class="btn btn-primary btn-sm">+ Nueva propuesta</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Iniciativa</th><th>Distrito</th><th>Monto</th><th>Fondo</th><th>Karma líder</th><th>Score IA</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Conversatorio cambio climático</td><td>Cusco</td><td>S/ 1 200</td><td>BCP Verde</td><td>340</td><td><b style="color:#0E9F6E;">87/100</b></td><td><span class="badge badge-amber">En revisión</span></td><td><button class="btn btn-xs btn-green">Aprobar</button></td></tr>
+            <tr><td>Biblioteca móvil escolar</td><td>Huancavelica</td><td>S/ 2 800</td><td>Educa</td><td>520</td><td><b style="color:#0E9F6E;">91/100</b></td><td><span class="badge badge-amber">En revisión</span></td><td><button class="btn btn-xs btn-green">Aprobar</button></td></tr>
+            <tr><td>Festival arte joven</td><td>Arequipa</td><td>S/ 4 500</td><td>BCP Cultura</td><td>180</td><td><b style="color:#D97706;">64/100</b></td><td><span class="badge badge-amber">En revisión</span></td><td><button class="btn btn-xs btn-ghost">Solicitar info</button></td></tr>
+            <tr><td>Emprendim. textil joven</td><td>Puno</td><td>S/ 3 200</td><td>Emprende</td><td>410</td><td><b style="color:#0E9F6E;">88/100</b></td><td><span class="badge badge-blue">Comité 24 may</span></td><td><button class="btn btn-xs btn-ghost">Detalle</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3 style="margin:0 0 10px;">📊 Inversión por categoría</h3>
+        <canvas id="chPatro" height="80"></canvas>
+      </div>
+    </section>
+
+    <!-- CONSULTAS -->
+    <section class="view" id="v-consultas">
+      <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,#fff,#EFF6FF);">
+        <h3 style="margin:0 0 8px;">📣 Crear consulta pública oficial</h3>
+        <p style="font-size:12px;color:#6B7280;margin:0 0 10px;">Como entidad verificada, puedes consultar a jóvenes de un distrito, región o todo el Perú.</p>
+        <button class="btn btn-blue btn-sm">+ Nueva consulta</button>
+      </div>
+
+      <div class="grid-cards">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-blue">🏛️ Municipalidad Cusco</span><span class="badge badge-green">ACTIVA</span></div>
+          <h4 style="margin:8px 0 4px;font-size:15px;">¿Qué obra priorizar con S/ 200 000?</h4>
+          <p style="font-size:11px;color:#6B7280;margin:0;">Cierra en 2 días · 1 823 votos · solo Cusco</p>
+          <div class="prog" style="margin-top:10px;"><span style="width:62%;background:#1E40AF;"></span></div>
+          <p style="font-size:10px;color:#6B7280;margin:4px 0 0;">Quórum: 1 823 / 2 950</p>
+          <div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-ghost btn-xs">Ver resultados</button><button class="btn btn-blue btn-xs">Activar SMS</button></div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-blue">🏛️ MINEDU</span><span class="badge badge-green">ACTIVA</span></div>
+          <h4 style="margin:8px 0 4px;font-size:15px;">Reforma educativa: ¿qué cambiarías?</h4>
+          <p style="font-size:11px;color:#6B7280;margin:0;">Cierra en 8 días · 12 401 votos · nacional</p>
+          <div class="prog" style="margin-top:10px;"><span style="width:82%;background:#1E40AF;"></span></div>
+          <p style="font-size:10px;color:#6B7280;margin:4px 0 0;">Quórum: 12 401 / 15 000</p>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-red">🏦 BCP</span><span class="badge badge-green">ACTIVA</span></div>
+          <h4 style="margin:8px 0 4px;font-size:15px;">Tema prioritario Fondo Verde 2026</h4>
+          <p style="font-size:11px;color:#6B7280;margin:0;">Cierra en 5 días · 3 421 votos</p>
+          <div class="prog" style="margin-top:10px;"><span style="width:45%;background:#E11D2E;"></span></div>
+        </div>
+        <div class="card" style="opacity:.6;">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-gray">🏛️ ONPE</span><span class="badge badge-gray">CERRADA</span></div>
+          <h4 style="margin:8px 0 4px;font-size:15px;">Voto facultativo desde los 16</h4>
+          <p style="font-size:11px;color:#6B7280;margin:0;">23 412 votos · 73% a favor</p>
+          <button class="btn btn-ghost btn-xs" style="margin-top:10px;">Descargar reporte</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESG -->
+    <section class="view" id="v-esg">
+      <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,#fff,#D1FAE5);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><h3 style="margin:0;">📈 Reporte ESG · Q2 2026</h3><p style="font-size:12px;color:#6B7280;margin:4px 0 0;">BCP — Contribución a ODS 4, 5, 10, 16, 17</p></div>
+          <button class="btn btn-green btn-sm">⬇️ Descargar PDF</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
+        <div class="kpi" style="background:linear-gradient(135deg,#fff,#FEE2E2);"><div class="l">ODS 4 · Educación</div><div class="v" style="color:#E11D2E;">+18 421</div><div class="d" style="color:#6B7280;">jóvenes alcanzados</div></div>
+        <div class="kpi" style="background:linear-gradient(135deg,#fff,#FEF3C7);"><div class="l">ODS 5 · Igualdad género</div><div class="v" style="color:#D97706;">53%</div><div class="d" style="color:#6B7280;">participación femenina</div></div>
+        <div class="kpi" style="background:linear-gradient(135deg,#fff,#D1FAE5);"><div class="l">ODS 10 · Desigualdad</div><div class="v" style="color:#0E9F6E;">42%</div><div class="d" style="color:#6B7280;">jóvenes en zonas rurales</div></div>
+        <div class="kpi" style="background:linear-gradient(135deg,#fff,#DBEAFE);"><div class="l">ODS 16 · Paz/Justicia</div><div class="v" style="color:#1E40AF;">28 410</div><div class="d" style="color:#6B7280;">votos verificados</div></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 10px;">🌎 Métricas auditables</h3>
+        <table class="tbl">
+          <thead><tr><th>Indicador</th><th>Q1</th><th>Q2</th><th>Meta 2026</th><th>Progreso</th></tr></thead>
+          <tbody>
+            <tr><td>Jóvenes verificados RENIEC</td><td>312 410</td><td>487 312</td><td>800 000</td><td><div class="prog"><span style="width:61%"></span></div></td></tr>
+            <tr><td>Iniciativas financiadas BCP</td><td>89</td><td>142</td><td>300</td><td><div class="prog"><span style="width:47%"></span></div></td></tr>
+            <tr><td>Inversión social BCP (S/)</td><td>180 K</td><td>348 K</td><td>1.2 M</td><td><div class="prog"><span style="width:29%"></span></div></td></tr>
+            <tr><td>Reducción brecha digital (pp)</td><td>-1.2</td><td>-3.0</td><td>-5.0</td><td><div class="prog"><span style="width:60%"></span></div></td></tr>
+            <tr><td>NPS cívico (sentirse escuchado)</td><td>52</td><td>61</td><td>70</td><td><div class="prog"><span style="width:87%"></span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- OPEN DATA -->
+    <section class="view" id="v-opendata">
+      <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,#fff,#F0FDFA);">
+        <h3 style="margin:0;">📂 Datos abiertos · CC BY 4.0</h3>
+        <p style="font-size:12px;color:#6B7280;margin:6px 0 0;">Tinkuy publica datasets agregados y anonimizados en <b>datosabiertos.gob.pe</b>. Sin información personal. Cumple Ley 29733.</p>
+      </div>
+
+      <div class="grid-cards">
+        <div class="card">
+          <h4 style="margin:0;">🗳️ Participación juvenil por distrito</h4>
+          <p style="font-size:11px;color:#6B7280;margin:6px 0;">1 874 filas · actualización mensual</p>
+          <div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-xs">CSV</button><button class="btn btn-ghost btn-xs">JSON</button><button class="btn btn-ghost btn-xs">API</button></div>
+        </div>
+        <div class="card">
+          <h4 style="margin:0;">📡 Brecha digital juvenil (IBDJ)</h4>
+          <p style="font-size:11px;color:#6B7280;margin:6px 0;">Distrito × edad × género · trimestral</p>
+          <div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-xs">CSV</button><button class="btn btn-ghost btn-xs">JSON</button></div>
+        </div>
+        <div class="card">
+          <h4 style="margin:0;">🗳️ Resultados consultas oficiales</h4>
+          <p style="font-size:11px;color:#6B7280;margin:6px 0;">12 consultas cerradas · histórico</p>
+          <div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-xs">CSV</button><button class="btn btn-ghost btn-xs">JSON</button></div>
+        </div>
+        <div class="card">
+          <h4 style="margin:0;">💰 Iniciativas financiadas</h4>
+          <p style="font-size:11px;color:#6B7280;margin:6px 0;">142 iniciativas · BCP + Estado</p>
+          <div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-xs">CSV</button><button class="btn btn-ghost btn-xs">JSON</button></div>
+        </div>
+        <div class="card">
+          <h4 style="margin:0;">🎯 Temas de iniciativas (clasificación)</h4>
+          <p style="font-size:11px;color:#6B7280;margin:6px 0;">Modelo ML clasificador · open source</p>
+          <div style="display:flex;gap:6px;"><button class="btn btn-ghost btn-xs">GitHub</button></div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,#fff,#FEF3C7);">
+          <h4 style="margin:0;">🔬 Solicitar dataset personalizado</h4>
+          <p style="font-size:11px;color:#6B7280;margin:6px 0;">Para investigadores · respuesta 5 días</p>
+          <button class="btn btn-amber btn-xs">Solicitar</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ---------- Region data + Map ----------
+const regions = [
+  {n:'Tumbes',i:35,p:'79k',d:'13 distritos',path:'M40,40 L70,38 L78,62 L52,70 Z'},
+  {n:'Piura',i:58,p:'520k',d:'65 distritos',path:'M52,70 L100,60 L115,110 L60,118 Z'},
+  {n:'Lambayeque',i:62,p:'320k',d:'38 distritos',path:'M60,118 L115,110 L120,140 L70,150 Z'},
+  {n:'La Libertad',i:71,p:'520k',d:'83 distritos',path:'M70,150 L130,135 L145,185 L85,195 Z'},
+  {n:'Cajamarca',i:34,p:'380k',d:'127 distritos',path:'M115,110 L165,108 L170,160 L130,162 Z'},
+  {n:'Amazonas',i:22,p:'115k',d:'84 distritos',path:'M165,108 L210,108 L215,158 L170,160 Z'},
+  {n:'Loreto',i:18,p:'280k',d:'53 distritos',path:'M210,30 L370,40 L378,180 L215,158 Z'},
+  {n:'San Martín',i:44,p:'220k',d:'77 distritos',path:'M170,160 L215,158 L225,210 L180,215 Z'},
+  {n:'Áncash',i:56,p:'290k',d:'166 distritos',path:'M85,195 L160,190 L170,245 L100,250 Z'},
+  {n:'Huánuco',i:38,p:'220k',d:'76 distritos',path:'M160,190 L225,210 L230,255 L170,260 Z'},
+  {n:'Ucayali',i:28,p:'140k',d:'17 distritos',path:'M225,210 L378,180 L390,310 L240,300 Z'},
+  {n:'Lima',i:92,p:'2.4M',d:'171 distritos',path:'M85,250 L170,260 L180,320 L95,330 Z'},
+  {n:'Junín',i:64,p:'350k',d:'124 distritos',path:'M170,260 L240,300 L245,350 L180,355 Z'},
+  {n:'Huancavelica',i:29,p:'120k',d:'96 distritos',path:'M125,330 L180,335 L185,375 L135,380 Z'},
+  {n:'Ica',i:68,p:'240k',d:'43 distritos',path:'M95,330 L150,340 L155,395 L105,400 Z'},
+  {n:'Ayacucho',i:41,p:'200k',d:'119 distritos',path:'M150,340 L210,355 L215,400 L160,405 Z'},
+  {n:'Apurímac',i:33,p:'130k',d:'84 distritos',path:'M195,395 L240,395 L245,430 L200,430 Z'},
+  {n:'Cusco',i:74,p:'380k',d:'112 distritos',path:'M240,350 L320,345 L325,420 L245,425 Z'},
+  {n:'Madre de Dios',i:38,p:'55k',d:'11 distritos',path:'M310,290 L390,310 L395,360 L325,355 Z'},
+  {n:'Puno',i:47,p:'350k',d:'110 distritos',path:'M285,415 L370,415 L370,470 L290,470 Z'},
+  {n:'Arequipa',i:78,p:'370k',d:'109 distritos',path:'M195,430 L290,430 L285,470 L200,470 Z'},
+  {n:'Moquegua',i:61,p:'65k',d:'20 distritos',path:'M225,470 L275,470 L268,490 L232,490 Z'},
+  {n:'Tacna',i:66,p:'95k',d:'28 distritos',path:'M232,490 L268,490 L260,478 Z'},
+];
+function color(i){return i>=70?'#10B981':i>=45?'#FCD34D':'#FCA5A5';}
+function selectReg(r,el){
+  document.querySelectorAll('.map-region').forEach(x=>x.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+  document.getElementById('reg-name').textContent=r.n;
+  document.getElementById('reg-meta').textContent=`${r.p} jóvenes 15-29 · ${r.d}`;
+  document.getElementById('reg-iacj').textContent=r.i+'/100';
+  document.getElementById('reg-br').textContent=Math.max(15,90-r.i)+'%';
+  document.getElementById('reg-rg').textContent=(Math.round(r.i*180+1000)).toLocaleString('es-PE');
+  document.getElementById('reg-in').textContent=Math.round(r.i*0.9);
+}
+function buildMap(){
+  const svg=document.querySelector('#peruMap g');
+  svg.innerHTML = regions.map(r=>`<path class="map-region" d="${r.path}" fill="${color(r.i)}" data-reg="${r.n}"/>`).join('') + `
+    <text x="78" y="92" font-size="9" fill="#374151">Piura</text>
+    <text x="100" y="170" font-size="9" fill="#fff">La Libertad</text>
+    <text x="270" y="110" font-size="11" fill="#fff" font-weight="700">LORETO</text>
+    <text x="115" y="285" font-size="12" fill="#fff" font-weight="800">LIMA</text>
+    <text x="260" y="385" font-size="9" fill="#fff">Cusco</text>
+    <text x="225" y="455" font-size="9" fill="#fff">Arequipa</text>
+    <text x="318" y="445" font-size="9" fill="#374151">Puno</text>
+  `;
+  svg.querySelectorAll('.map-region').forEach(p=>{
+    const r=regions.find(x=>x.n===p.dataset.reg);
+    p.addEventListener('click',()=>selectReg(r,p));
+  });
+  // default
+  const ay=regions.find(r=>r.n==='Ayacucho');
+  selectReg(ay,svg.querySelector('[data-reg="Ayacucho"]'));
+}
+
+// ---------- Navigation ----------
+function show(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  document.querySelectorAll('.side-item').forEach(e=>e.classList.remove('on'));
+  event && event.currentTarget && event.currentTarget.classList.add('on');
+  document.getElementById('view-title').textContent = {dashboard:'Dashboard',mapa:'Mapa interactivo',iniciativas:'Iniciativas',alertas:'Alertas IA',patrocinio:'Patrocinios BCP',consultas:'Consultas públicas',esg:'Reporte ESG',opendata:'Open Data'}[v];
+  if(v==='mapa') setTimeout(buildMap,0);
+  if(v==='mapa' && !window._chTR){window._chTR=new Chart(document.getElementById('chTemaReg'),{type:'doughnut',data:{labels:['Ambiente','Educación','Cultura','Salud','Emprend.'],datasets:[{data:[34,22,18,14,12],backgroundColor:['#10B981','#3B82F6','#7C3AED','#EC4899','#F59E0B']}]},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9}}}}}})}
+  if(v==='patrocinio' && !window._chP){
+    window._chP = new Chart(document.getElementById('chPatro'),{type:'bar',data:{labels:['Ambiente','Educación','Cultura','Emprend.','Salud mental','Movilidad','Otros'],datasets:[{label:'S/ invertido',data:[92000,78000,54000,68000,42000,30000,24200],backgroundColor:'#E11D2E'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  }
+}
+
+// ---------- Charts initial ----------
+window.addEventListener('DOMContentLoaded',()=>{
+  new Chart(document.getElementById('chMonth'),{
+    type:'line',
+    data:{labels:['Dic','Ene','Feb','Mar','Abr','May'],datasets:[
+      {label:'Eventos creados',data:[120,180,260,340,420,520],borderColor:'#E11D2E',backgroundColor:'rgba(225,29,46,.1)',tension:.4,fill:true},
+      {label:'Nuevos registros',data:[5000,8500,12000,18500,26000,34000],borderColor:'#0E9F6E',backgroundColor:'rgba(14,159,110,.1)',tension:.4,fill:true,yAxisID:'y1'},
+      {label:'Votos consultas',data:[800,1400,2100,3500,4800,6200],borderColor:'#1E40AF',backgroundColor:'rgba(30,64,175,.1)',tension:.4,fill:true,yAxisID:'y1'}
+    ]},
+    options:{plugins:{legend:{position:'bottom'}},scales:{y:{position:'left'},y1:{position:'right',grid:{display:false}}}}
+  });
+  new Chart(document.getElementById('chTema'),{type:'doughnut',data:{labels:['Ambiente','Educación','Cultura','Emprend.','Salud','Otros'],datasets:[{data:[26,18,17,12,15,12],backgroundColor:['#10B981','#3B82F6','#7C3AED','#F59E0B','#EC4899','#9CA3AF']}]},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}});
+  new Chart(document.getElementById('chReg'),{type:'bar',data:{labels:['Lima','Arequipa','Cusco','La Libertad','Ica','Junín','Lambayeque','Tacna'],datasets:[{label:'IACJ',data:[92,78,74,71,68,64,62,66],backgroundColor:'#E11D2E'}]},options:{indexAxis:'y',plugins:{legend:{display:false}}}});
+  new Chart(document.getElementById('chBrecha'),{type:'bar',data:{labels:['Urbano','Rural'],datasets:[{label:'2023 INEI',data:[25,60],backgroundColor:'#9CA3AF'},{label:'Distritos con Tinkuy',data:[18,42],backgroundColor:'#0E9F6E'}]},options:{plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,max:80}}}});
+});
+</script>
+</body>
+</html>

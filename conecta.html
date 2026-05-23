@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tinkuy Conecta · Canales offline</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{background:#0B0F19;color:#E5E7EB;}
+  .container{max-width:1280px;margin:0 auto;padding:30px 24px;}
+  .hero{text-align:center;padding:40px 20px;background:radial-gradient(ellipse at center, #1F2937 0%, transparent 70%);}
+  .grid-channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:20px;}
+  .channel{background:#111827;border:1px solid #1F2937;border-radius:18px;padding:22px;}
+  .channel h3{margin-top:0;color:#fff;}
+  /* Nokia phone */
+  .nokia{background:#111;border-radius:24px;padding:18px;width:260px;margin:0 auto;border:3px solid #333;box-shadow:0 20px 40px rgba(0,0,0,.5);}
+  .nokia-screen{background:#9BBC0F;color:#0F380F;padding:12px;border-radius:6px;font-family:'Courier New',monospace;font-size:12px;min-height:200px;line-height:1.5;white-space:pre-wrap;border:2px solid #555;}
+  .nokia-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px;}
+  .nokia-key{background:#222;color:#ddd;border:1px solid #444;border-radius:6px;padding:10px;text-align:center;font-weight:700;cursor:pointer;font-family:monospace;font-size:13px;}
+  .nokia-key:hover{background:#E11D2E;color:#fff;}
+  .nokia-key small{display:block;font-size:8px;color:#999;font-weight:400;}
+  /* IVR phone */
+  .ivr-phone{background:#1F2937;border-radius:18px;padding:18px;}
+  .ivr-line{display:flex;gap:10px;padding:8px;border-radius:8px;margin-bottom:6px;}
+  .ivr-line.bot{background:#374151;}
+  .ivr-line.user{background:#065F46;justify-content:flex-end;}
+  .ivr-line .bub{font-size:12px;max-width:80%;color:#fff;}
+  /* Tambo card */
+  .tambo{background:#1F2937;border-radius:10px;padding:12px;font-size:12px;display:flex;gap:10px;align-items:center;}
+  .tambo .ic{width:38px;height:38px;background:#7C3AED;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .stat{background:linear-gradient(135deg,#1F2937,#111827);border-radius:14px;padding:18px;text-align:center;border:1px solid #374151;}
+  .stat .v{font-size:32px;font-weight:800;color:#10B981;}
+  .stat .l{font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+  .radio-row{background:#1F2937;border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .radio-row .wave{width:28px;height:28px;border-radius:50%;background:#E11D2E;display:flex;align-items:center;justify-content:center;animation:pulse 1.5s infinite;}
+  a.btn{text-decoration:none;display:inline-flex;}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="index.html" onclick="history.back();return false;" class="btn btn-ghost btn-sm" style="background:#1F2937;border-color:#374151;color:#fff;">← Hub</a>
+
+  <div class="hero">
+    <div style="display:inline-block;background:#7C3AED;color:#fff;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:14px;">📡 TINKUY CONECTA · MÓDULO OFFLINE</div>
+    <h1 style="font-size:42px;margin:0;color:#fff;">Nadie se queda fuera de la conversación</h1>
+    <p style="color:#9CA3AF;margin:10px auto;max-width:700px;">El 60% de jóvenes peruanos en zonas rurales no tiene acceso constante a internet. Tinkuy Conecta lleva la participación cívica por <b>SMS</b>, <b>llamada IVR multilingüe</b>, <b>Tambos MIDIS</b> y <b>radios comunitarias</b>.</p>
+  </div>
+
+  <!-- IMPACTO -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:30px;">
+    <div class="stat"><div class="v">62 410</div><div class="l">Jóvenes alcanzados offline</div></div>
+    <div class="stat"><div class="v">524</div><div class="l">Tambos MIDIS activos</div></div>
+    <div class="stat"><div class="v">38</div><div class="l">Radios comunitarias aliadas</div></div>
+    <div class="stat"><div class="v">3</div><div class="l">Idiomas (es / qu / ay)</div></div>
+  </div>
+
+  <div class="grid-channels">
+
+    <!-- SMS *789# -->
+    <div class="channel">
+      <h3>📱 Canal 1 · USSD interactivo *789#</h3>
+      <p style="font-size:13px;color:#9CA3AF;">Sin internet, sin datos, sin app. Marca <b style="color:#fff;">*789#</b> desde cualquier celular básico.</p>
+
+      <div class="nokia">
+        <div class="nokia-screen" id="screen">TINKUY *789#
+─────────────
+Bienvenido/a
+Hola JOVEN
+
+1. Eventos cercanos
+2. Votar consulta
+3. Pedir apoyo psico
+4. Karma de mi com.
+5. Mi perfil
+0. Salir
+
+Pulsa una opción</div>
+        <div class="nokia-keys">
+          <div class="nokia-key" onclick="press(1)">1<small>eventos</small></div>
+          <div class="nokia-key" onclick="press(2)">2<small>votar</small></div>
+          <div class="nokia-key" onclick="press(3)">3<small>psico</small></div>
+          <div class="nokia-key" onclick="press(4)">4<small>karma</small></div>
+          <div class="nokia-key" onclick="press(5)">5<small>perfil</small></div>
+          <div class="nokia-key" onclick="press(0)">0<small>salir</small></div>
+        </div>
+      </div>
+
+      <div style="background:#1F2937;padding:12px;border-radius:10px;margin-top:16px;font-size:12px;color:#D1D5DB;">
+        <b style="color:#10B981;">✓ Gratuito</b> · convenio con Movistar, Claro, Entel y Bitel para tarificar a cero en *789#<br>
+        <b style="color:#10B981;">✓ Verificación</b> por DNI parcial (últimos 4) + geolocalización celular<br>
+        <b style="color:#10B981;">✓ Histórico</b> de las últimas 3 interacciones se sincroniza con la app si el joven se actualiza
+      </div>
+    </div>
+
+    <!-- IVR -->
+    <div class="channel">
+      <h3>☎️ Canal 2 · IVR multilingüe 0800-TINKUY</h3>
+      <p style="font-size:13px;color:#9CA3AF;">Para quienes no leen castellano. Operadora virtual en <b>quechua chanka</b>, <b>quechua cuzqueño</b> y <b>aymara</b>.</p>
+
+      <div class="ivr-phone">
+        <div class="ivr-line bot"><span style="font-size:18px;">🤖</span><div class="bub">"Allinllanchu kachkanki. Bienvenido a Tinkuy. Para continuar en quechua, marque 1. Para castellano, marque 2. Para aymara, 3."</div></div>
+        <div class="ivr-line user"><div class="bub">[ 1 ]</div></div>
+        <div class="ivr-line bot"><span style="font-size:18px;">🤖</span><div class="bub">"Allin. Imatataq munanki? 1 evento llaqtaykipi, 2 votacionpi kachkay, 3 yanapay psico, 4 karmaykitam yachay..."</div></div>
+        <div class="ivr-line user"><div class="bub">[ 2 ]</div></div>
+        <div class="ivr-line bot"><span style="font-size:18px;">🤖</span><div class="bub">"Cusco municipalidad tapuyninpi: Iman obrata munanki? 1 ciclovía, 2 biblioteca, 3 parque, 4 cancha."</div></div>
+        <div class="ivr-line user"><div class="bub">[ 1 ]</div></div>
+        <div class="ivr-line bot" style="background:#065F46;"><span style="font-size:18px;">✓</span><div class="bub"><b>"Voto registrado. Sulpayki. Hanaqpi rikunay'kichu llapan resultadukunata. Gracias por participar."</b></div></div>
+      </div>
+
+      <p style="font-size:11px;color:#6B7280;font-style:italic;margin-top:10px;">* Voces sintetizadas por IA (proyecto WIRA-Llama, alianza con PUCP). Latencia &lt;800ms.</p>
+    </div>
+
+    <!-- TAMBOS -->
+    <div class="channel">
+      <h3>🏠 Canal 3 · Red de Tambos MIDIS</h3>
+      <p style="font-size:13px;color:#9CA3AF;">524 puntos físicos en zonas rurales con WiFi gratis. Los gestores de Tambo son embajadores Tinkuy capacitados.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="tambo"><div class="ic">📍</div><div><b style="color:#fff;">Tambo Putumayo</b><br><span style="color:#9CA3AF;">Loreto · 142 jóvenes registrados</span></div></div>
+        <div class="tambo"><div class="ic">📍</div><div><b style="color:#fff;">Tambo Vilcabamba</b><br><span style="color:#9CA3AF;">Cusco · 89 jóvenes</span></div></div>
+        <div class="tambo"><div class="ic">📍</div><div><b style="color:#fff;">Tambo Condorcanqui</b><br><span style="color:#9CA3AF;">Amazonas · 67 jóvenes</span></div></div>
+        <div class="tambo"><div class="ic">📍</div><div><b style="color:#fff;">Tambo Yauli</b><br><span style="color:#9CA3AF;">Huancavelica · 124 jóvenes</span></div></div>
+        <div class="tambo"><div class="ic">📍</div><div><b style="color:#fff;">Tambo Caylloma</b><br><span style="color:#9CA3AF;">Arequipa · 98 jóvenes</span></div></div>
+        <div class="tambo"><div class="ic">📍</div><div><b style="color:#fff;">Tambo Manu</b><br><span style="color:#9CA3AF;">Madre de Dios · 42 jóvenes</span></div></div>
+      </div>
+
+      <div style="background:linear-gradient(135deg,#7C3AED,#5B21B6);border-radius:10px;padding:12px;margin-top:14px;font-size:12px;color:#fff;">
+        <b>📦 Kit Tinkuy en cada Tambo</b><br>
+        <span style="opacity:.9;">2 tablets robustas · cargador solar · cartillas físicas en español/quechua · QR para descarga app offline</span>
+      </div>
+
+      <a class="btn btn-sm" href="#" style="margin-top:12px;background:#7C3AED;color:#fff;">Ver mapa completo (524 puntos) →</a>
+    </div>
+
+    <!-- RADIOS -->
+    <div class="channel">
+      <h3>📻 Canal 4 · Radios comunitarias aliadas</h3>
+      <p style="font-size:13px;color:#9CA3AF;">38 emisoras locales transmiten <b>"La Hora Tinkuy"</b>, programa semanal con resúmenes de iniciativas, ganadores de consultas y entrevistas a líderes jóvenes.</p>
+
+      <div class="radio-row">
+        <div class="wave">📻</div>
+        <div style="flex:1;font-size:12px;"><b style="color:#fff;">Radio Inti Raymi · Cusco · 90.7 FM</b><div style="color:#9CA3AF;">Mié 7pm · 28k oyentes 15-29</div></div>
+        <span class="badge badge-green">EN VIVO</span>
+      </div>
+      <div class="radio-row">
+        <div style="width:28px;height:28px;border-radius:50%;background:#374151;display:flex;align-items:center;justify-content:center;">📻</div>
+        <div style="flex:1;font-size:12px;"><b style="color:#fff;">Radio La Voz · Loreto · 101.3 FM</b><div style="color:#9CA3AF;">Sáb 6pm · 18k oyentes · habla castellano + cocama</div></div>
+      </div>
+      <div class="radio-row">
+        <div style="width:28px;height:28px;border-radius:50%;background:#374151;display:flex;align-items:center;justify-content:center;">📻</div>
+        <div style="flex:1;font-size:12px;"><b style="color:#fff;">Radio Pachamama · Puno · 103.5 FM</b><div style="color:#9CA3AF;">Dom 8am · 42k oyentes · aymara + quechua</div></div>
+      </div>
+      <div class="radio-row">
+        <div style="width:28px;height:28px;border-radius:50%;background:#374151;display:flex;align-items:center;justify-content:center;">📻</div>
+        <div style="flex:1;font-size:12px;"><b style="color:#fff;">Radio Marañón · Cajamarca · 96.1 FM</b><div style="color:#9CA3AF;">Vie 5pm · 22k oyentes 15-29</div></div>
+      </div>
+
+      <div style="background:#1F2937;border-radius:10px;padding:12px;margin-top:14px;font-size:12px;color:#D1D5DB;">
+        <b style="color:#F59E0B;">🎤 Mecánica:</b> Los jóvenes llaman a la radio para opinar en vivo. La radio reporta votos verbales a Tinkuy vía formulario simple. Los locutores son aliados certificados.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FLUJO INTEGRADO -->
+  <div style="background:linear-gradient(135deg,#1F2937,#111827);border-radius:18px;padding:30px;margin-top:30px;border:1px solid #374151;">
+    <h2 style="margin:0 0 6px;color:#fff;">🔄 Cómo se integran los 4 canales</h2>
+    <p style="color:#9CA3AF;font-size:13px;margin:0 0 20px;">Misma identidad RENIEC, misma cuenta, misma Karma Cívico. Da igual desde dónde participes.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:center;">
+      <div style="background:#111827;border:1px solid #374151;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:30px;">📡</div><b style="color:#fff;font-size:12px;">Joven en zona rural</b><div style="font-size:10px;color:#6B7280;">Sin internet</div></div>
+      <div style="text-align:center;color:#E11D2E;font-size:24px;">→</div>
+      <div style="background:#111827;border:1px solid #374151;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:30px;">☎️📻🏠</div><b style="color:#fff;font-size:12px;">Canal offline</b><div style="font-size:10px;color:#6B7280;">SMS / IVR / Tambo / Radio</div></div>
+      <div style="text-align:center;color:#E11D2E;font-size:24px;">→</div>
+      <div style="background:linear-gradient(135deg,#E11D2E,#F59E0B);border-radius:12px;padding:16px;text-align:center;color:#fff;"><div style="font-size:30px;">🧠</div><b style="font-size:12px;">Backend Tinkuy</b><div style="font-size:10px;opacity:.9;">Voto verificado + agregado</div></div>
+    </div>
+
+    <p style="text-align:center;color:#9CA3AF;font-size:13px;margin:24px 0 0;font-style:italic;">"Una joven aymara en Puno, sin smartphone, vota en la consulta de MINEDU. Su voz cuenta exactamente igual que la de un estudiante de la PUCP."</p>
+  </div>
+
+  <!-- COSTOS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:30px;">
+    <div class="channel">
+      <h3>💰 Modelo económico sostenible</h3>
+      <table style="width:100%;font-size:12px;color:#D1D5DB;">
+        <tr style="border-bottom:1px solid #374151;"><td style="padding:8px 0;">SMS/USSD (4 operadoras)</td><td style="text-align:right;color:#10B981;font-weight:700;">S/ 0 (convenio)</td></tr>
+        <tr style="border-bottom:1px solid #374151;"><td style="padding:8px 0;">IVR multilingüe (infra IA)</td><td style="text-align:right;">S/ 0.02 / minuto</td></tr>
+        <tr style="border-bottom:1px solid #374151;"><td style="padding:8px 0;">Tambos MIDIS</td><td style="text-align:right;color:#10B981;font-weight:700;">S/ 0 (alianza)</td></tr>
+        <tr style="border-bottom:1px solid #374151;"><td style="padding:8px 0;">Radios comunitarias</td><td style="text-align:right;">S/ 200/mes × 38</td></tr>
+        <tr><td style="padding:8px 0;"><b style="color:#fff;">TOTAL anual</b></td><td style="text-align:right;color:#F59E0B;font-weight:800;">~S/ 180 000</td></tr>
+      </table>
+      <p style="font-size:11px;color:#6B7280;font-style:italic;margin:10px 0 0;">Financiado por BCP (RSE) + cofinanciación de MIDIS</p>
+    </div>
+    <div class="channel">
+      <h3>📊 Resultado proyectado</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#D1D5DB;">
+        <div>✅ <b style="color:#10B981;">+340 mil jóvenes rurales</b> conectados al ecosistema cívico al año 2 sin necesidad de smartphone</div>
+        <div>✅ <b style="color:#10B981;">12 lenguas originarias</b> en roadmap (qu, ay, sh, aw, awa, asháninka, etc.)</div>
+        <div>✅ <b style="color:#10B981;">Cero zona del Perú sin acceso</b> a la conversación cívica</div>
+        <div>✅ <b style="color:#10B981;">Costo por joven alcanzado: S/ 2.90</b> (vs S/ 18+ de campañas tradicionales)</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:30px;margin-top:30px;">
+    <a class="btn" href="index.html" style="background:#E11D2E;color:#fff;padding:12px 28px;font-weight:700;">← Volver al Hub Tinkuy</a>
+  </div>
+
+</div>
+
+<script>
+const flows = {
+  '1': `📅 EVENTOS CERCANOS
+─────────────
+1. Reforestación
+   Sacsayhuamán
+   📍 12 km · sáb 9am
+   Karma +20
+
+2. Festival danzas
+   📍 4 km · vie 6pm
+   Karma +10
+
+3. Charla salud mental
+   📍 8 km · mié 7pm
+   Karma +15
+
+1-3 inscribirse
+* volver  # menú`,
+  '2': `🗳️ CONSULTA ACTIVA
+─────────────
+MUNI CUSCO:
+¿Obra prioritaria
+S/ 200 000?
+
+1. Ciclovía
+2. Biblioteca
+3. Parque
+4. Cancha
+
+Pulsa 1-4
+Voto vale igual
+que en app`,
+  '3': `🧠 LÍNEA CUÍDATE
+─────────────
+Te escuchamos.
+
+1. Hablar ahora con
+   psicólog@ por SMS
+2. Crisis · llamar
+   911 (gratis)
+3. Recibir audios
+   de meditación
+4. Buscar grupo
+   de apoyo joven
+
+* volver`,
+  '4': `⭐ TU KARMA CÍVICO
+─────────────
+HOLA JOVEN
+
+Karma: 247 pts
+Nivel: Vecino activo
+
+Últimas activ.:
++ Voto consulta (5)
++ Festival (15)
++ Reforestación (20)
+
+Canjear:
+1. Beca SENATI
+2. Comisión BCP $0
+3. Yape recarga`,
+  '5': `👤 MI PERFIL
+─────────────
+DNI: ****1234
+Distrito: VILCABAMBA
+Karma: 247
+
+1. Cambiar distrito
+2. Privacidad
+3. Borrar mi cuenta
+   (RGPD/Ley 29733)
+0. Cerrar sesión`,
+  '0': `Gracias por usar
+TINKUY *789#
+
+Tu voz cuenta.
+Sulpayki / Jallalla
+
+[Sesión finalizada]`
+};
+function press(n){
+  const s = document.getElementById('screen');
+  s.textContent = flows[n] || s.textContent;
+}
+</script>
+</body>
+</html>

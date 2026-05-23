@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tinkuy Aliado · Municipios y Empresas</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{background:#F3F4F6;}
+  .layout{display:flex;min-height:100vh;}
+  .main{flex:1;min-width:0;}
+  .view{display:none;padding:24px;}
+  .view.on{display:block;}
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1E40AF,#7C3AED);padding:30px;}
+  .login-card{background:#fff;border-radius:18px;padding:34px;width:100%;max-width:420px;box-shadow:0 30px 80px rgba(0,0,0,.3);}
+  .opt-card{border:2px solid #E5E7EB;border-radius:12px;padding:14px;cursor:pointer;text-align:center;}
+  .opt-card:hover{border-color:#1E40AF;background:#EFF6FF;}
+  .opt-card.sel{border-color:#1E40AF;background:#DBEAFE;}
+  .vote-bar{height:32px;background:#F3F4F6;border-radius:8px;overflow:hidden;display:flex;align-items:center;padding:0 12px;font-size:12px;font-weight:700;color:#fff;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN VIEW -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+      <div style="width:42px;height:42px;border-radius:12px;" class="brand-grad"></div>
+      <div><b style="font-size:20px;">Tinkuy</b><div style="font-size:11px;color:#6B7280;">Portal de aliados oficiales</div></div>
+    </div>
+    <h2 style="margin:0 0 6px;font-size:22px;">Acceso seguro</h2>
+    <p style="font-size:12px;color:#6B7280;margin:0 0 16px;">Solo entidades verificadas pueden lanzar consultas oficiales con valor vinculante.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div class="opt-card sel"><div style="font-size:28px;">🏛️</div><b style="font-size:13px;">Municipalidad</b><div style="font-size:10px;color:#6B7280;">Gob. local/regional</div></div>
+      <div class="opt-card"><div style="font-size:28px;">🏢</div><b style="font-size:13px;">Empresa / ONG</b><div style="font-size:10px;color:#6B7280;">Sector privado</div></div>
+    </div>
+
+    <label style="font-size:11px;color:#6B7280;font-weight:600;">RUC institucional</label>
+    <input class="input" value="20131367981" style="margin:4px 0 12px;"/>
+    <label style="font-size:11px;color:#6B7280;font-weight:600;">Email funcionario verificado</label>
+    <input class="input" value="rrodriguez@municusco.gob.pe" style="margin:4px 0 12px;"/>
+
+    <button class="btn btn-blue btn-block" onclick="enter()">Ingresar con MFA</button>
+    <p style="font-size:10px;color:#9CA3AF;text-align:center;margin:12px 0 0;">Autenticado vía PIDE (Plataforma de Interoperabilidad del Estado)</p>
+  </div>
+</div>
+
+<!-- APP VIEW -->
+<div class="layout" id="app-screen" style="display:none;">
+  <aside class="side" style="background:#1E40AF;">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 12px 18px;">
+      <div style="width:34px;height:34px;border-radius:10px;background:#fff;color:#1E40AF;display:flex;align-items:center;justify-content:center;font-weight:800;">🏛️</div>
+      <div><div style="color:#fff;font-weight:800;">Muni. Cusco</div><div style="font-size:10px;">Aliado verificado ✓</div></div>
+    </div>
+    <div class="side-item on" onclick="show('home')">📊 Mi dashboard</div>
+    <div class="side-item" onclick="show('crear')">📣 Crear consulta</div>
+    <div class="side-item" onclick="show('viva')">🗳️ Consulta en vivo</div>
+    <div class="side-item" onclick="show('patrocinar')">💰 Patrocinar iniciativas</div>
+    <div class="side-item" onclick="show('mis')">📁 Mis iniciativas patrocinadas</div>
+    <div class="side-item" onclick="show('impacto')">📈 Reporte de impacto</div>
+    <div class="side-item" onclick="show('config')">⚙️ Configuración</div>
+
+    <div style="margin-top:24px;padding:12px;background:rgba(255,255,255,.08);border-radius:10px;font-size:11px;color:#DBEAFE;">
+      <b style="color:#fff;">Confianza ciudadana</b>
+      <div style="font-size:22px;font-weight:800;color:#fff;margin:4px 0;">⭐ 4.6 / 5</div>
+      <div>Basado en 1 421 valoraciones de jóvenes</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 style="margin:0;font-size:22px;font-weight:800;" id="view-title">Mi dashboard</h1>
+        <p style="margin:0;font-size:12px;color:#6B7280;">Conectando con 24 312 jóvenes verificados en tu jurisdicción</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <a href="index.html" onclick="history.back();return false;" class="btn btn-ghost btn-sm">← Hub</a>
+        <button class="btn btn-blue btn-sm">+ Nueva acción</button>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section class="view on" id="v-home">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px;">
+        <div class="kpi"><div class="l">Jóvenes alcanzables</div><div class="v" style="color:#1E40AF;">24 312</div><div class="d" style="color:#6B7280;">en mi distrito</div></div>
+        <div class="kpi"><div class="l">Consultas lanzadas</div><div class="v">12</div><div class="d" style="color:#0E9F6E;">▲ 3 este trim.</div></div>
+        <div class="kpi"><div class="l">Iniciativas patrocinadas</div><div class="v">28</div><div class="d" style="color:#0E9F6E;">▲ 8 este trim.</div></div>
+        <div class="kpi"><div class="l">Valoración promedio</div><div class="v" style="color:#F59E0B;">4.6 ⭐</div><div class="d" style="color:#0E9F6E;">+0.3 vs Q1</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+        <div class="card">
+          <h3 style="margin:0 0 12px;">📣 Mis consultas activas</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="border:1px solid #E5E7EB;border-radius:10px;padding:12px;">
+              <div style="display:flex;justify-content:space-between;"><b style="font-size:14px;">¿Qué obra priorizar con S/ 200 000?</b><span class="badge badge-green">ACTIVA</span></div>
+              <div class="prog" style="margin-top:8px;"><span style="width:62%;background:#1E40AF;"></span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:#6B7280;margin-top:4px;"><span>1 823 votos · cierra en 2 días</span><a style="color:#1E40AF;font-weight:600;cursor:pointer;" onclick="show('viva')">Ver en vivo →</a></div>
+            </div>
+            <div style="border:1px solid #E5E7EB;border-radius:10px;padding:12px;">
+              <div style="display:flex;justify-content:space-between;"><b style="font-size:14px;">Nombre para nuevo parque urbano</b><span class="badge badge-amber">QUÓRUM PARCIAL</span></div>
+              <div class="prog" style="margin-top:8px;"><span style="width:38%;background:#1E40AF;"></span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:#6B7280;margin-top:4px;"><span>610 votos · cierra en 6 días</span><span>Falta promoción</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 8px;">💚 Iniciativas pendientes</h3>
+          <p style="font-size:11px;color:#6B7280;margin:0 0 10px;">Jóvenes solicitan tu apoyo:</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="border-left:3px solid #E11D2E;background:#FEF2F2;padding:8px;border-radius:6px;font-size:12px;"><b>Festival danzas andinas</b><br><small>Mariana T. · solicita permisos + S/ 1 500</small></div>
+            <div style="border-left:3px solid #F59E0B;background:#FFFBEB;padding:8px;border-radius:6px;font-size:12px;"><b>Limpieza río Watanay</b><br><small>Diego A. · solicita 20 voluntarios muni</small></div>
+            <div style="border-left:3px solid #1E40AF;background:#EFF6FF;padding:8px;border-radius:6px;font-size:12px;"><b>Conversatorio cambio climático</b><br><small>Camila R. · solicita auditorio</small></div>
+          </div>
+          <button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="show('patrocinar')">Ver 12 más →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREAR CONSULTA -->
+    <section class="view" id="v-crear">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div class="card">
+          <h3 style="margin:0 0 4px;">📣 Crear consulta pública oficial</h3>
+          <p style="font-size:11px;color:#6B7280;margin:0 0 16px;">Paso 2 de 4 · Pregunta y opciones</p>
+
+          <label style="font-size:11px;font-weight:700;color:#374151;">Pregunta principal</label>
+          <input class="input" value="¿En qué obra debe invertirse el saldo presupuestal de S/ 200 000?" style="margin:4px 0 12px;"/>
+
+          <label style="font-size:11px;font-weight:700;color:#374151;">Opciones de respuesta</label>
+          <div style="display:flex;flex-direction:column;gap:6px;margin:4px 0 12px;">
+            <input class="input" value="🏞️ Remodelación Parque Central"/>
+            <input class="input" value="📚 Biblioteca municipal joven"/>
+            <input class="input" value="⚽ Cancha deportiva multiusos"/>
+            <input class="input" value="🚲 Ciclovía 2km Av. El Sol"/>
+            <button class="btn btn-ghost btn-xs" style="align-self:flex-start;">+ Agregar opción</button>
+          </div>
+
+          <label style="font-size:11px;font-weight:700;color:#374151;">Alcance geográfico</label>
+          <select class="input" style="margin:4px 0 12px;">
+            <option>📍 Distrito Cusco (24 312 jóvenes)</option>
+            <option>🗺️ Toda la región Cusco (380k)</option>
+            <option>🇵🇪 Nacional (8.4M)</option>
+          </select>
+
+          <label style="font-size:11px;font-weight:700;color:#374151;">Duración</label>
+          <select class="input" style="margin:4px 0 12px;">
+            <option>7 días</option><option>14 días</option><option>30 días</option>
+          </select>
+
+          <label style="font-size:11px;font-weight:700;color:#374151;">Canales</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 16px;">
+            <span class="chip on">📱 App</span><span class="chip on">🌐 Web</span><span class="chip on">📡 SMS *789#</span><span class="chip">📻 Radio</span>
+          </div>
+
+          <div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-block">← Atrás</button><button class="btn btn-blue btn-block">Siguiente →</button></div>
+        </div>
+
+        <div class="card" style="background:linear-gradient(135deg,#fff,#EFF6FF);">
+          <h3 style="margin:0;">👁️ Vista previa</h3>
+          <p style="font-size:11px;color:#6B7280;margin:4px 0 16px;">Así verán tu consulta los jóvenes en la app:</p>
+          <div class="phone" style="margin:0 auto;transform:scale(.85);transform-origin:top center;">
+            <div class="phone-screen" style="padding:16px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span class="badge badge-blue">🏛️ Muni. Cusco</span><span class="badge badge-amber">2 días</span></div>
+              <h4 style="margin:8px 0;font-size:14px;">¿En qué obra debe invertirse el saldo de S/ 200 000?</h4>
+              <p style="font-size:10px;color:#6B7280;">📍 Solo Cusco · cierra 25 may</p>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px;">
+                <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:8px;border-radius:8px;font-size:11px;">🏞️ Parque Central</div>
+                <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:8px;border-radius:8px;font-size:11px;">📚 Biblioteca joven</div>
+                <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:8px;border-radius:8px;font-size:11px;">⚽ Cancha deportiva</div>
+                <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:8px;border-radius:8px;font-size:11px;">🚲 Ciclovía</div>
+              </div>
+              <button class="btn btn-blue btn-block btn-sm" style="margin-top:10px;">Votar (verificado)</button>
+            </div>
+          </div>
+
+          <div style="background:#FEF3C7;border-radius:10px;padding:10px;margin-top:12px;">
+            <b style="font-size:11px;color:#92400E;">⚠️ Compromiso de transparencia</b>
+            <p style="font-size:10px;color:#92400E;margin:4px 0 0;">Al publicar esta consulta, tu municipalidad se compromete públicamente a ejecutar la opción ganadora si alcanza quórum (5 833 votos).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONSULTA EN VIVO -->
+    <section class="view" id="v-viva">
+      <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,#1E40AF,#3B82F6);color:#fff;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">EN VIVO 🔴</span>
+            <h2 style="margin:8px 0 4px;">¿Qué obra priorizar con S/ 200 000?</h2>
+            <p style="font-size:12px;margin:0;opacity:.9;">Cierra en 1 día 18 horas · Distrito Cusco</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:34px;font-weight:800;">1 823</div>
+            <div style="font-size:11px;opacity:.9;">votos verificados</div>
+            <div class="prog" style="margin-top:6px;background:rgba(255,255,255,.2);"><span style="width:62%;background:#fff;"></span></div>
+            <div style="font-size:10px;margin-top:4px;">Quórum 2 950 · 62%</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+        <div class="card">
+          <h3 style="margin:0 0 12px;">📊 Resultados en tiempo real</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><b>🚲 Ciclovía 2km Av. El Sol</b><b>42% · 766</b></div>
+              <div class="vote-bar"><div style="background:#10B981;width:42%;height:100%;border-radius:8px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><b>📚 Biblioteca municipal joven</b><b>28% · 510</b></div>
+              <div class="vote-bar"><div style="background:#3B82F6;width:28%;height:100%;border-radius:8px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><b>🏞️ Remodelación Parque Central</b><b>19% · 346</b></div>
+              <div class="vote-bar"><div style="background:#F59E0B;width:19%;height:100%;border-radius:8px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><b>⚽ Cancha deportiva multiusos</b><b>11% · 201</b></div>
+              <div class="vote-bar"><div style="background:#9CA3AF;width:11%;height:100%;border-radius:8px;"></div></div>
+            </div>
+          </div>
+
+          <h4 style="margin:18px 0 8px;font-size:13px;">💬 Comentarios destacados (top con likes)</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+            <div style="background:#F9FAFB;padding:10px;border-radius:8px;border-left:3px solid #10B981;"><b>Camila R. (19)</b> · ▲ 142<br>"La ciclovía va a beneficiar a todos los días, no solo eventos puntuales."</div>
+            <div style="background:#F9FAFB;padding:10px;border-radius:8px;border-left:3px solid #3B82F6;"><b>Diego A. (23)</b> · ▲ 98<br>"La biblioteca es esencial para los que no tenemos espacio para estudiar en casa."</div>
+            <div style="background:#F9FAFB;padding:10px;border-radius:8px;border-left:3px solid #F59E0B;"><b>Sofía Q. (21)</b> · ▲ 67<br>"¿Por qué no se puede combinar biblioteca + ciclovía con S/100k cada una?"</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 10px;">👥 Demografía votantes</h3>
+          <canvas id="chEdad" height="120"></canvas>
+
+          <h4 style="margin:14px 0 6px;font-size:12px;">📍 Por barrio</h4>
+          <table class="tbl" style="font-size:11px;">
+            <tr><td>San Blas</td><td>342</td><td>19%</td></tr>
+            <tr><td>Wanchaq</td><td>521</td><td>28%</td></tr>
+            <tr><td>San Sebastián</td><td>410</td><td>22%</td></tr>
+            <tr><td>Centro</td><td>312</td><td>17%</td></tr>
+            <tr><td>Otros</td><td>238</td><td>14%</td></tr>
+          </table>
+
+          <h4 style="margin:14px 0 6px;font-size:12px;">📡 Canal de voto</h4>
+          <div style="font-size:11px;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;justify-content:space-between;"><span>📱 App móvil</span><b>1 412 (77%)</b></div>
+            <div style="display:flex;justify-content:space-between;"><span>🌐 Web</span><b>241 (13%)</b></div>
+            <div style="display:flex;justify-content:space-between;"><span>📡 SMS *789#</span><b>170 (9%)</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PATROCINAR -->
+    <section class="view" id="v-patrocinar">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <span class="chip on">Todas las solicitudes (15)</span><span class="chip">🌱 Ambiente</span><span class="chip">📚 Educación</span><span class="chip">🎭 Cultura</span><span class="chip">Karma alto</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;">
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-green">🌱 Ambiente</span><span style="font-size:11px;color:#6B7280;">📍 Cusco</span></div>
+          <h4 style="margin:8px 0 4px;">Reforestación Sacsayhuamán</h4>
+          <p style="font-size:12px;color:#6B7280;margin:0 0 8px;">Camila R. · ⭐ Karma 340 · 12 iniciativas previas</p>
+          <p style="font-size:12px;margin:8px 0;">Plantar 200 queuñas para restaurar laderas. Necesita: <b>S/ 1 200</b> + permisos.</p>
+          <div style="background:#F0FDF4;padding:8px;border-radius:8px;font-size:11px;color:#065F46;">✓ 47 voluntarios ya inscritos · ✓ aliada con SERFOR</div>
+          <div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-green btn-sm btn-block">+ Patrocinar S/ 1 200</button><button class="btn btn-ghost btn-sm">Detalle</button></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-purple">🎭 Cultura</span><span style="font-size:11px;color:#6B7280;">📍 Cusco</span></div>
+          <h4 style="margin:8px 0 4px;">Festival danzas andinas</h4>
+          <p style="font-size:12px;color:#6B7280;margin:0 0 8px;">Mariana T. · ⭐ Karma 280</p>
+          <p style="font-size:12px;margin:8px 0;">Festival 3 días en Plaza San Blas. Necesita: <b>S/ 1 500</b> + permisos + auditorio backup.</p>
+          <div style="background:#F0FDF4;padding:8px;border-radius:8px;font-size:11px;color:#065F46;">✓ 132 inscritos · ✓ 8 grupos folklóricos</div>
+          <div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-blue btn-sm btn-block">+ Patrocinar parcial</button><button class="btn btn-ghost btn-sm">Detalle</button></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-blue">📚 Educación</span><span style="font-size:11px;color:#6B7280;">📍 Cusco</span></div>
+          <h4 style="margin:8px 0 4px;">Conversatorio cambio climático</h4>
+          <p style="font-size:12px;color:#6B7280;margin:0 0 8px;">Diego A. · ⭐ Karma 410</p>
+          <p style="font-size:12px;margin:8px 0;">Necesita: <b>auditorio para 80 personas</b> · 24 mayo, 6pm.</p>
+          <div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-blue btn-sm btn-block">✓ Ceder auditorio muni</button><button class="btn btn-ghost btn-sm">Detalle</button></div>
+        </div>
+
+        <div class="card" style="opacity:.7;">
+          <div style="display:flex;justify-content:space-between;"><span class="badge badge-amber">💼 Emprend.</span><span style="font-size:11px;color:#6B7280;">📍 Wanchaq</span></div>
+          <h4 style="margin:8px 0 4px;">Bazar joven emprendedor</h4>
+          <p style="font-size:12px;margin:8px 0;">Necesita: <b>plaza pública + S/ 800</b> publicidad.</p>
+          <span class="badge badge-gray" style="margin-top:8px;">✓ Aprobada por Junta Municipal</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIS PATROCINADAS -->
+    <section class="view" id="v-mis">
+      <table class="tbl">
+        <thead><tr><th>Iniciativa</th><th>Categoría</th><th>Aportado</th><th>Estado</th><th>Asistencia</th><th>Cobertura</th><th>NPS</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Reforestación Sacsayhuamán</td><td><span class="badge badge-green">Ambiente</span></td><td>S/ 1 200</td><td><span class="badge badge-green">Ejecutada ✓</span></td><td>47/47 (100%)</td><td>3 medios</td><td>⭐ 4.8</td><td><button class="btn btn-xs btn-ghost">Reporte</button></td></tr>
+          <tr><td>Hackathon emprendim.</td><td><span class="badge badge-amber">Emprend.</span></td><td>S/ 3 500</td><td><span class="badge badge-green">Ejecutada ✓</span></td><td>284/300 (95%)</td><td>8 medios</td><td>⭐ 4.6</td><td><button class="btn btn-xs btn-ghost">Reporte</button></td></tr>
+          <tr><td>Carpa salud mental UNI</td><td><span class="badge badge-red">Salud</span></td><td>S/ 800</td><td><span class="badge badge-green">Ejecutada ✓</span></td><td>284</td><td>2 medios</td><td>⭐ 4.9</td><td><button class="btn btn-xs btn-ghost">Reporte</button></td></tr>
+          <tr><td>Festival danzas andinas</td><td><span class="badge badge-purple">Cultura</span></td><td>S/ 1 500</td><td><span class="badge badge-amber">En ejecución</span></td><td>132/200</td><td>—</td><td>—</td><td><button class="btn btn-xs btn-ghost">Monitorear</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- IMPACTO -->
+    <section class="view" id="v-impacto">
+      <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,#fff,#DBEAFE);">
+        <h3 style="margin:0;">📈 Reporte ejecutivo para Junta Directiva — Q2 2026</h3>
+        <p style="font-size:12px;color:#6B7280;margin:6px 0 0;">Generado automáticamente con datos auditables Tinkuy</p>
+        <div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-blue btn-sm">⬇️ PDF ejecutivo</button><button class="btn btn-ghost btn-sm">⬇️ Datos crudos CSV</button></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
+        <div class="kpi"><div class="l">Jóvenes alcanzados</div><div class="v" style="color:#1E40AF;">8 421</div><div class="d">35% del total local</div></div>
+        <div class="kpi"><div class="l">Inversión Q2</div><div class="v">S/ 18 200</div><div class="d">Presupuesto: S/ 40 000</div></div>
+        <div class="kpi"><div class="l">Costo por joven</div><div class="v" style="color:#0E9F6E;">S/ 2.16</div><div class="d">▼ 18% vs Q1</div></div>
+        <div class="kpi"><div class="l">Engagement digital</div><div class="v" style="color:#7C3AED;">+340%</div><div class="d">menciones en RRSS</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="card">
+          <h3 style="margin:0 0 8px;">💚 Confianza ciudadana joven</h3>
+          <canvas id="chConf" height="140"></canvas>
+        </div>
+        <div class="card">
+          <h3 style="margin:0 0 8px;">🎯 Impacto por categoría</h3>
+          <canvas id="chImp" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px;background:linear-gradient(135deg,#fff,#D1FAE5);">
+        <h3 style="margin:0;">🏆 Reconocimientos automáticos</h3>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+          <div style="background:#fff;border:1px solid #A7F3D0;border-radius:10px;padding:10px 14px;"><b>🥇 Top 5 Municipios</b><div style="font-size:11px;color:#6B7280;">por participación juvenil Q2</div></div>
+          <div style="background:#fff;border:1px solid #A7F3D0;border-radius:10px;padding:10px 14px;"><b>⭐ Sello Tinkuy Joven</b><div style="font-size:11px;color:#6B7280;">cumplió 100% sus compromisos</div></div>
+          <div style="background:#fff;border:1px solid #A7F3D0;border-radius:10px;padding:10px 14px;"><b>📣 Aliado destacado</b><div style="font-size:11px;color:#6B7280;">mencionado en 8 medios</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIG -->
+    <section class="view" id="v-config">
+      <div class="card">
+        <h3 style="margin:0 0 14px;">⚙️ Configuración institucional</h3>
+        <label style="font-size:11px;font-weight:700;">Logo institucional</label>
+        <div style="display:flex;align-items:center;gap:10px;margin:6px 0 14px;"><div style="width:50px;height:50px;background:#1E40AF;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;">MC</div><button class="btn btn-ghost btn-sm">Cambiar</button></div>
+
+        <label style="font-size:11px;font-weight:700;">Funcionarios autorizados</label>
+        <table class="tbl" style="margin-top:6px;">
+          <tr><td><b>Rodrigo Sánchez</b> · Gerente RSE</td><td>rsanchez@municusco.gob.pe</td><td><span class="badge badge-green">Admin</span></td></tr>
+          <tr><td>Patricia Quispe · Juventud</td><td>pquispe@municusco.gob.pe</td><td><span class="badge badge-blue">Editor</span></td></tr>
+          <tr><td>Carlos Tito · Comunicación</td><td>ctito@municusco.gob.pe</td><td><span class="badge badge-gray">Lector</span></td></tr>
+        </table>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;">+ Invitar funcionario</button>
+
+        <h4 style="margin:18px 0 8px;font-size:13px;">🔐 Compromisos públicos firmados</h4>
+        <ul style="font-size:12px;color:#374151;padding-left:18px;line-height:1.8;">
+          <li>✅ Responder consultas con quórum en máx. 30 días hábiles</li>
+          <li>✅ Publicar acta de cada consulta cerrada</li>
+          <li>✅ No filtrar datos personales de jóvenes votantes</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+function enter(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-screen').style.display='flex';
+}
+function show(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  document.querySelectorAll('.side-item').forEach(e=>e.classList.remove('on'));
+  if(event && event.currentTarget && event.currentTarget.classList) event.currentTarget.classList.add('on');
+  document.getElementById('view-title').textContent={home:'Mi dashboard',crear:'Crear consulta',viva:'Consulta en vivo',patrocinar:'Patrocinar iniciativas',mis:'Mis iniciativas patrocinadas',impacto:'Reporte de impacto',config:'Configuración'}[v];
+  if(v==='viva' && !window._chE){
+    window._chE = new Chart(document.getElementById('chEdad'),{type:'bar',data:{labels:['15-17','18-21','22-25','26-29'],datasets:[{label:'Votos',data:[218,742,512,351],backgroundColor:'#1E40AF'}]},options:{plugins:{legend:{display:false}}}});
+  }
+  if(v==='impacto' && !window._chI){
+    window._chI = new Chart(document.getElementById('chImp'),{type:'doughnut',data:{labels:['Educación','Cultura','Ambiente','Salud','Emprend.'],datasets:[{data:[3200,2100,1800,1400,1200],backgroundColor:['#3B82F6','#7C3AED','#10B981','#EC4899','#F59E0B']}]},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}});
+    window._chC = new Chart(document.getElementById('chConf'),{type:'line',data:{labels:['Q4 25','Q1 26','Q2 26'],datasets:[{label:'NPS joven',data:[28,52,61],borderColor:'#0E9F6E',backgroundColor:'rgba(14,159,110,.15)',tension:.4,fill:true}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
+  }
+}
+</script>
+</body>
+</html>

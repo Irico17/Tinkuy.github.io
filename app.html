@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tinkuy App · Mockup</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  .toolbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  .menu-panel{background:#fff;border-bottom:2px solid #E5E7EB;padding:10px 22px 14px;position:sticky;top:57px;z-index:49;display:none;flex-wrap:wrap;gap:6px;}
+  .menu-panel.open{display:flex;}
+  .screen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:30px;padding:30px;justify-items:center;}
+  .screen-pick{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .screen-pick .label{font-size:12px;font-weight:600;color:#6B7280;}
+  .menu{display:flex;gap:6px;flex-wrap:wrap;}
+  .menu .chip{font-size:11px;padding:5px 10px;}
+  .h-grad-red{background:linear-gradient(135deg,#E11D2E,#F59E0B);color:#fff;padding:18px;padding-top:28px;}
+  .h-grad-blue{background:linear-gradient(135deg,#1E40AF,#3B82F6);color:#fff;padding:18px;padding-top:28px;}
+  .h-grad-green{background:linear-gradient(135deg,#0E9F6E,#10B981);color:#fff;padding:18px;padding-top:28px;}
+  .h-grad-amber{background:linear-gradient(135deg,#D97706,#F59E0B);color:#fff;padding:18px;padding-top:28px;}
+  .h-grad-purple{background:linear-gradient(135deg,#7C3AED,#A78BFA);color:#fff;padding:18px;padding-top:28px;}
+  .h-grad-teal{background:linear-gradient(135deg,#0F766E,#14B8A6);color:#fff;padding:18px;padding-top:28px;}
+  .h-grad-pink{background:linear-gradient(135deg,#DB2777,#F472B6);color:#fff;padding:18px;padding-top:28px;}
+  .list-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6;}
+  .ico-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .vote-opt{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+  .vote-opt:hover{border-color:var(--tinkuy-blue);}
+  .vote-opt.sel{border-color:var(--tinkuy-blue);border-width:2px;background:#EFF6FF;}
+  .stepper{display:flex;gap:4px;}
+  .stepper .step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.3);}
+  .stepper .step.on{background:#fff;}
+  .ach-card{padding:10px;border-radius:10px;background:#fff;border:1px solid #E5E7EB;text-align:center;}
+  .ach-card .ico{font-size:28px;}
+  .reward-card{border:1px solid #E5E7EB;border-radius:12px;padding:10px;display:flex;gap:10px;align-items:center;}
+  .empty-radio{width:18px;height:18px;border:2px solid #D1D5DB;border-radius:50%;flex-shrink:0;}
+  .empty-radio.on{border-color:var(--tinkuy-blue);background:radial-gradient(circle,var(--tinkuy-blue) 0 5px,transparent 6px);}
+  .pill-tab{padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;background:#F3F4F6;color:#6B7280;cursor:pointer;}
+  .pill-tab.on{background:#0B0F19;color:#fff;}
+</style>
+</head>
+<body>
+
+<header class="toolbar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="index.html" onclick="history.back();return false;" style="color:#6B7280;text-decoration:none;display:flex;align-items:center;gap:4px;">← Hub</a>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:32px;height:32px;border-radius:8px;" class="brand-grad"></div>
+      <div><b>Tinkuy App</b> <span style="color:#9CA3AF;font-size:12px;">· 25 pantallas</span></div>
+    </div>
+  </div>
+  <button onclick="toggleMenu()" id="menu-toggle" style="display:flex;align-items:center;gap:6px;background:#F3F4F6;border:1px solid #E5E7EB;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:12px;font-weight:600;color:#374151;">
+    <span id="menu-icon">☰</span> Pantallas <span id="menu-badge" style="background:#E11D2E;color:#fff;border-radius:999px;padding:0 6px;font-size:10px;">25</span>
+  </button>
+</header>
+<div class="menu-panel" id="menu"></div>
+
+<main class="screen-grid" id="screens"></main>
+
+<script>
+// ---- definición de pantallas ----
+// Cada pantalla retorna HTML del contenido interior del phone-screen.
+
+const screens = [
+  // 1) ONBOARDING 1
+  { key:'onb1', label:'Onboarding 1/3', body: `
+    <div class="h-grad-red" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:40px 24px;text-align:center;">
+      <div style="font-size:120px;margin-bottom:20px;">🤝</div>
+      <h2 style="font-size:26px;margin:0;font-weight:800;">Tu voz importa</h2>
+      <p style="opacity:.9;margin:10px 0 0;">Conecta con jóvenes de tu comunidad y haz que tus ideas lleguen a quienes deciden.</p>
+      <div style="display:flex;gap:6px;margin:24px 0 12px;">
+        <div style="width:24px;height:6px;border-radius:3px;background:#fff;"></div>
+        <div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);"></div>
+        <div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);"></div>
+      </div>
+      <button onclick="go('onb2')" class="btn btn-block" style="background:#fff;color:#E11D2E;">Siguiente</button>
+    </div>`},
+
+  // 2) ONBOARDING 2
+  { key:'onb2', label:'Onboarding 2/3', body: `
+    <div class="h-grad-amber" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:40px 24px;text-align:center;">
+      <div style="font-size:120px;margin-bottom:20px;">🏆</div>
+      <h2 style="font-size:26px;margin:0;font-weight:800;">Gana por participar</h2>
+      <p style="opacity:.9;margin:10px 0 0;">Cada acción cívica suma <b>Karma</b>: descuentos BCP, becas, cartas y avales.</p>
+      <div style="display:flex;gap:6px;margin:24px 0 12px;">
+        <div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);"></div>
+        <div style="width:24px;height:6px;border-radius:3px;background:#fff;"></div>
+        <div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);"></div>
+      </div>
+      <button onclick="go('onb3')" class="btn btn-block" style="background:#fff;color:#D97706;">Siguiente</button>
+    </div>`},
+
+  // 3) ONBOARDING 3
+  { key:'onb3', label:'Onboarding 3/3', body: `
+    <div class="h-grad-green" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:40px 24px;text-align:center;">
+      <div style="font-size:120px;margin-bottom:20px;">🌎</div>
+      <h2 style="font-size:26px;margin:0;font-weight:800;">Crece con tu comunidad</h2>
+      <p style="opacity:.9;margin:10px 0 0;">Lidera iniciativas, accede a mentoría y cuida tu bienestar emocional.</p>
+      <div style="display:flex;gap:6px;margin:24px 0 12px;">
+        <div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);"></div>
+        <div style="width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);"></div>
+        <div style="width:24px;height:6px;border-radius:3px;background:#fff;"></div>
+      </div>
+      <button onclick="go('login')" class="btn btn-block" style="background:#fff;color:#0E9F6E;">Empezar</button>
+    </div>`},
+
+  // 4) LOGIN
+  { key:'login', label:'Login DNI', body: `
+    <div class="brand-grad" style="color:#fff;padding:32px 22px;text-align:center;">
+      <div style="width:60px;height:60px;border-radius:18px;background:rgba(255,255,255,.2);margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;">T</div>
+      <h2 style="font-size:22px;margin:14px 0 4px;font-weight:800;">Bienvenido</h2>
+      <p style="opacity:.9;font-size:13px;margin:0;">Verifica tu identidad para entrar</p>
+    </div>
+    <div class="scroll" style="flex:1;padding:22px;">
+      <label style="font-size:12px;font-weight:700;color:#374151;">DNI (8 dígitos)</label>
+      <input class="input" style="margin-top:6px;letter-spacing:4px;" value="•• ••• •••" maxlength="8"/>
+      <label style="font-size:12px;font-weight:700;color:#374151;margin-top:14px;display:block;">Fecha de nacimiento</label>
+      <input class="input" style="margin-top:6px;" value="15 / 03 / 2006"/>
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:12px;margin-top:16px;font-size:11px;color:#1E40AF;">
+        🔒 Tinkuy verifica tu identidad con <b>RENIEC</b>. Solo jóvenes 15-29 años. Tu DNI nunca se almacena en claro. Cumple <b>Ley 29733</b>.
+      </div>
+      <button onclick="go('liveness')" class="btn btn-primary btn-block" style="margin-top:16px;">Continuar →</button>
+      <p style="text-align:center;font-size:11px;color:#6B7280;margin-top:14px;">¿Eres adulto/organización? <span style="color:#E11D2E;font-weight:600;">Conoce Tinkuy Aliado</span></p>
+    </div>`},
+
+  // 5) LIVENESS
+  { key:'liveness', label:'Selfie biométrica', body: `
+    <div style="background:#0B0F19;color:#fff;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 22px;text-align:center;">
+      <p style="font-size:12px;opacity:.7;letter-spacing:1px;">PASO 2 · BIOMETRÍA</p>
+      <h2 style="font-size:22px;margin:8px 0 20px;font-weight:800;">Validación facial</h2>
+      <div style="width:200px;height:200px;border-radius:50%;border:4px dashed #E11D2E;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;" class="pulse">🤳</div>
+      <p style="margin-top:24px;font-size:13px;opacity:.85;">Centra tu rostro y parpadea cuando se ilumine</p>
+      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:12px;margin-top:24px;width:100%;font-size:11px;text-align:left;">
+        ✓ Validación cruzada con RENIEC<br>
+        ✓ Tu cara nunca se guarda en servidores<br>
+        ✓ Cumplimiento estricto Ley PDP
+      </div>
+      <button onclick="go('verified')" class="btn btn-primary btn-block" style="margin-top:24px;">Capturar selfie</button>
+    </div>`},
+
+  // 6) VERIFIED
+  { key:'verified', label:'Cuenta verificada', body: `
+    <div class="h-grad-green" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 22px;text-align:center;color:#fff;">
+      <div style="width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:70px;">✓</div>
+      <h2 style="font-size:26px;margin:20px 0 6px;font-weight:800;">¡Bienvenida, Camila!</h2>
+      <p style="opacity:.9;font-size:14px;">Tu identidad fue verificada con RENIEC</p>
+      <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:14px;margin-top:24px;width:100%;text-align:left;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><b>Camila R. Quispe</b><span class="badge" style="background:#fff;color:#0E9F6E;">VERIFICADA</span></div>
+        <div style="opacity:.9;">📍 Cusco, Cusco · 19 años</div>
+        <div style="opacity:.9;">🎓 UNSAAC · Antropología</div>
+      </div>
+      <button onclick="go('home')" class="btn btn-block" style="background:#fff;color:#0E9F6E;margin-top:24px;">Entrar a Tinkuy</button>
+    </div>`},
+
+  // 7) HOME
+  { key:'home', label:'🏠 Home (feed)', body: `
+    <div class="brand-grad" style="color:#fff;padding:18px 18px 18px;padding-top:28px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:11px;opacity:.8;">Hola,</div>
+          <div style="font-weight:800;font-size:18px;">Camila 👋</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div onclick="go('notif')" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;">🔔<span style="position:absolute;top:-2px;right:-2px;background:#F59E0B;color:#fff;font-size:9px;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">3</span></div>
+          <div onclick="go('profile')" style="width:36px;height:36px;border-radius:50%;background:#FCD34D;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700;color:#92400E;">CR</div>
+        </div>
+      </div>
+      <div onclick="go('karma')" style="background:rgba(255,255,255,.15);backdrop-filter:blur(6px);border-radius:12px;padding:10px;margin-top:14px;display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <div style="width:42px;height:42px;border-radius:50%;" class="karma-ring"><div style="margin:4px;width:34px;height:34px;border-radius:50%;background:#fff;color:#D97706;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;">340</div></div>
+        <div style="flex:1;font-size:12px;"><b>Karma Cívico</b><br><span style="opacity:.85;">160 puntos para tu próxima recompensa BCP</span></div>
+        <span style="font-size:20px;opacity:.7;">›</span>
+      </div>
+    </div>
+    <div class="scroll" style="flex:1;padding:14px;background:#F9FAFB;">
+      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;">
+        <span class="pill-tab on">Todo</span>
+        <span class="pill-tab">🌱 Ambiente</span>
+        <span class="pill-tab">🎭 Cultura</span>
+        <span class="pill-tab">📚 Educación</span>
+        <span class="pill-tab">💼 Emprend.</span>
+      </div>
+
+      <div style="margin-bottom:12px;"><b style="font-size:13px;">📍 Cerca de ti</b></div>
+
+      <div onclick="go('event')" style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid #E5E7EB;margin-bottom:10px;cursor:pointer;">
+        <div style="height:90px;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;font-size:48px;">🌱</div>
+        <div style="padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:start;"><span class="badge badge-green">Ambiente</span><span style="font-size:10px;color:#6B7280;">2.1 km</span></div>
+          <div style="font-weight:700;font-size:14px;margin-top:6px;">Reforestación en Sacsayhuamán</div>
+          <div style="font-size:11px;color:#6B7280;margin-top:2px;">Sáb 24 may · 8:00 am · 47 inscritos</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+            <div style="display:flex;align-items:center;gap:-6px;">
+              <div style="width:22px;height:22px;border-radius:50%;background:#FCA5A5;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700;">M</div>
+              <div style="width:22px;height:22px;border-radius:50%;background:#FCD34D;border:2px solid #fff;margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700;">J</div>
+              <div style="width:22px;height:22px;border-radius:50%;background:#86EFAC;border:2px solid #fff;margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700;">+</div>
+            </div>
+            <span style="color:#E11D2E;font-weight:700;font-size:11px;">+50 karma →</span>
+          </div>
+        </div>
+      </div>
+
+      <div onclick="go('voz')" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;"><span class="badge badge-blue">🗳️ Voz Pública</span><span style="font-size:10px;color:#1E40AF;font-weight:700;">⏱ 2 días</span></div>
+        <div style="font-weight:700;font-size:14px;margin-top:6px;">¿Qué obra priorizar con S/ 200 000?</div>
+        <div style="font-size:11px;color:#1E40AF;margin-top:2px;">Municipalidad de Cusco · 1 823 votos</div>
+      </div>
+
+      <div style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid #E5E7EB;margin-bottom:10px;">
+        <div style="height:90px;background:linear-gradient(135deg,#7C3AED,#A78BFA);display:flex;align-items:center;justify-content:center;font-size:48px;">🎭</div>
+        <div style="padding:12px;">
+          <span class="badge badge-purple">Cultura</span>
+          <div style="font-weight:700;font-size:14px;margin-top:6px;">Festival de danzas andinas</div>
+          <div style="font-size:11px;color:#6B7280;margin-top:2px;">Dom 25 may · 4:00 pm · 132 inscritos · 5.4 km</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:14px;padding:12px;border:1px solid #E5E7EB;margin-bottom:10px;">
+        <span class="badge badge-amber">💰 BCP Fondo Verde</span>
+        <div style="font-weight:700;font-size:13px;margin-top:6px;">Tu iniciativa califica para microfinanciamiento</div>
+        <div style="font-size:11px;color:#6B7280;margin-top:2px;">Hasta S/ 3 000 sin garantía · respuesta en 5 días</div>
+        <button onclick="go('fondo')" class="btn btn-amber btn-xs" style="margin-top:8px;">Aplicar ahora</button>
+      </div>
+    </div>
+    ${tabBar('home')}
+  `},
+
+  // 8) EXPLORE MAP
+  { key:'explore', label:'🗺️ Explorar mapa', body: `
+    <div style="padding:14px 18px;padding-top:28px;background:#fff;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input class="input" placeholder="🔍 Buscar iniciativas..." style="font-size:13px;padding:8px 12px;"/>
+        <button class="btn btn-ghost btn-sm">⚙️</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;overflow-x:auto;">
+        <span class="pill-tab on">Todo</span>
+        <span class="pill-tab">🌱</span>
+        <span class="pill-tab">🎭</span>
+        <span class="pill-tab">📚</span>
+        <span class="pill-tab">💼</span>
+        <span class="pill-tab">🧠</span>
+      </div>
+    </div>
+    <div style="flex:1;position:relative;background:linear-gradient(135deg,#E0F2FE,#DBEAFE);">
+      <svg viewBox="0 0 300 400" style="width:100%;height:100%;">
+        <!-- streets -->
+        <path d="M0,100 L300,100 M0,200 L300,200 M0,300 L300,300 M100,0 L100,400 M200,0 L200,400" stroke="#94A3B8" stroke-width="1" opacity=".4"/>
+        <!-- river -->
+        <path d="M20,50 Q150,180 290,90" stroke="#60A5FA" stroke-width="8" fill="none" opacity=".6"/>
+        <!-- pins -->
+        <circle cx="120" cy="180" r="14" fill="#10B981"/><text x="120" y="184" text-anchor="middle" font-size="14">🌱</text>
+        <circle cx="200" cy="120" r="14" fill="#7C3AED"/><text x="200" y="124" text-anchor="middle" font-size="14">🎭</text>
+        <circle cx="80" cy="260" r="14" fill="#3B82F6"/><text x="80" y="264" text-anchor="middle" font-size="14">📚</text>
+        <circle cx="230" cy="280" r="14" fill="#F59E0B"/><text x="230" y="284" text-anchor="middle" font-size="14">💼</text>
+        <circle cx="150" cy="320" r="14" fill="#EC4899"/><text x="150" y="324" text-anchor="middle" font-size="14">🧠</text>
+        <!-- user -->
+        <circle cx="150" cy="220" r="20" fill="#E11D2E" opacity=".3"/>
+        <circle cx="150" cy="220" r="10" fill="#E11D2E"/>
+        <circle cx="150" cy="220" r="4" fill="#fff"/>
+      </svg>
+      <!-- bottom sheet -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:18px 18px 0 0;padding:14px;box-shadow:0 -8px 24px -8px rgba(0,0,0,.15);">
+        <div style="width:36px;height:4px;background:#D1D5DB;border-radius:2px;margin:0 auto 12px;"></div>
+        <div style="font-size:12px;color:#6B7280;margin-bottom:8px;font-weight:600;">🌱 Cerca de tu ubicación</div>
+        <div onclick="go('event')" style="display:flex;gap:10px;align-items:center;border-bottom:1px solid #F3F4F6;padding-bottom:10px;cursor:pointer;">
+          <div style="width:42px;height:42px;border-radius:10px;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:20px;">🌱</div>
+          <div style="flex:1;"><div style="font-weight:700;font-size:13px;">Reforestación Sacsayhuamán</div><div style="font-size:11px;color:#6B7280;">2.1 km · sáb 8 am · +50 karma</div></div>
+          <span style="font-size:20px;color:#9CA3AF;">›</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;padding-top:10px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;font-size:20px;">🎭</div>
+          <div style="flex:1;"><div style="font-weight:700;font-size:13px;">Festival de danzas andinas</div><div style="font-size:11px;color:#6B7280;">5.4 km · dom 4 pm</div></div>
+        </div>
+      </div>
+    </div>
+    ${tabBar('explore')}
+  `},
+
+  // 9) EVENT DETAIL
+  { key:'event', label:'Detalle de evento', body: `
+    <div style="position:relative;">
+      <div style="height:160px;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;font-size:80px;color:#fff;">🌱</div>
+      <div onclick="go('explore')" style="position:absolute;top:32px;left:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;">←</div>
+      <div style="position:absolute;top:32px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;display:flex;align-items:center;justify-content:center;">♡</div>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;">
+      <span class="badge badge-green">🌱 Ambiente · +50 karma</span>
+      <h2 style="margin:8px 0 4px;font-size:20px;">Reforestación en Sacsayhuamán</h2>
+      <div style="font-size:12px;color:#6B7280;">Organizado por <b>Colectivo Q'ente</b> · Verificado ✓</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+        <div style="background:#F9FAFB;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#6B7280;">📅 Fecha</div><div style="font-weight:700;font-size:13px;">Sáb 24 may · 8 am</div></div>
+        <div style="background:#F9FAFB;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#6B7280;">📍 Distancia</div><div style="font-weight:700;font-size:13px;">2.1 km</div></div>
+        <div style="background:#F9FAFB;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#6B7280;">👥 Inscritos</div><div style="font-weight:700;font-size:13px;">47 / 80</div></div>
+        <div style="background:#F9FAFB;border-radius:10px;padding:10px;"><div style="font-size:10px;color:#6B7280;">⏱ Duración</div><div style="font-weight:700;font-size:13px;">4 horas</div></div>
+      </div>
+
+      <h3 style="margin:14px 0 6px;font-size:13px;">Descripción</h3>
+      <p style="font-size:12px;color:#4B5563;line-height:1.6;margin:0;">Plantaremos 200 queuñas nativas en la zona alta de Sacsayhuamán, en coordinación con el SERFOR y la Municipalidad de Cusco. ¡Trae guantes y agua!</p>
+
+      <h3 style="margin:14px 0 6px;font-size:13px;">🤝 Aliados</h3>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="badge badge-red">BCP</span>
+        <span class="badge badge-green">SERFOR</span>
+        <span class="badge badge-blue">Muni. Cusco</span>
+      </div>
+
+      <h3 style="margin:14px 0 6px;font-size:13px;">¿Qué llevar?</h3>
+      <ul style="font-size:12px;color:#4B5563;padding-left:18px;margin:0;line-height:1.7;">
+        <li>Guantes de jardinería</li><li>Botella de agua</li><li>Bloqueador y gorra</li>
+      </ul>
+    </div>
+    <div style="border-top:1px solid #E5E7EB;padding:12px 18px;background:#fff;display:flex;gap:8px;align-items:center;">
+      <div style="flex:1;"><div style="font-size:10px;color:#6B7280;">Recompensa</div><div style="font-weight:800;color:#D97706;">+50 karma</div></div>
+      <button class="btn btn-primary" style="flex:1;">Apuntarme</button>
+    </div>
+  `},
+
+  // 10) CREATE INITIATIVE
+  { key:'create', label:'➕ Crear iniciativa', body: `
+    <div class="h-grad-red">
+      <div style="display:flex;align-items:center;gap:10px;"><span onclick="go('home')" style="cursor:pointer;font-size:20px;">←</span><span style="font-size:11px;opacity:.8;">PASO 2 DE 4</span></div>
+      <h2 style="font-size:20px;margin:8px 0 10px;font-weight:800;">Crear iniciativa</h2>
+      <div class="stepper"><div class="step on"></div><div class="step on"></div><div class="step"></div><div class="step"></div></div>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;">
+      <label style="font-size:12px;font-weight:700;">Título</label>
+      <input class="input" style="margin-top:4px;" value="Conversatorio: jóvenes y cambio climático"/>
+
+      <label style="font-size:12px;font-weight:700;margin-top:14px;display:block;">Tipo de iniciativa</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px;">
+        <div style="border:1px solid #E5E7EB;border-radius:10px;padding:10px;text-align:center;font-size:11px;">🎉<br>Evento</div>
+        <div style="border:2px solid #E11D2E;background:#FEF2F2;border-radius:10px;padding:10px;text-align:center;font-size:11px;font-weight:700;">🎤<br>Conversa</div>
+        <div style="border:1px solid #E5E7EB;border-radius:10px;padding:10px;text-align:center;font-size:11px;">🤝<br>Servicio</div>
+        <div style="border:1px solid #E5E7EB;border-radius:10px;padding:10px;text-align:center;font-size:11px;">📚<br>Taller</div>
+        <div style="border:1px solid #E5E7EB;border-radius:10px;padding:10px;text-align:center;font-size:11px;">🎨<br>Cultural</div>
+        <div style="border:1px solid #E5E7EB;border-radius:10px;padding:10px;text-align:center;font-size:11px;">🌱<br>Ambient.</div>
+      </div>
+
+      <label style="font-size:12px;font-weight:700;margin-top:14px;display:block;">Fecha y lugar</label>
+      <input class="input" style="margin-top:4px;" value="Sáb 31 may · 5 pm · Plaza Regocijo, Cusco"/>
+
+      <label style="font-size:12px;font-weight:700;margin-top:14px;display:block;">¿Necesitas apoyo?</label>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;font-size:12px;">
+        <label style="display:flex;gap:8px;"><input type="checkbox" checked> 💰 Microfinanciamiento BCP (hasta S/ 3 000)</label>
+        <label style="display:flex;gap:8px;"><input type="checkbox"> 🏢 Local (Tambo, municipio, universidad)</label>
+        <label style="display:flex;gap:8px;"><input type="checkbox" checked> 🎤 Especialista invitado</label>
+        <label style="display:flex;gap:8px;"><input type="checkbox"> 📣 Difusión radio comunitaria</label>
+        <label style="display:flex;gap:8px;"><input type="checkbox"> 🛡️ Coordinación con Serenazgo/PNP</label>
+      </div>
+
+      <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:10px;padding:10px;margin-top:14px;font-size:11px;color:#92400E;">
+        💡 <b>Tinkuy IA detecta:</b> tu iniciativa califica para el <b>Fondo BCP Jóvenes Verdes</b>. Se enviará automáticamente a evaluación al publicar.
+      </div>
+    </div>
+    <div style="padding:12px 18px;border-top:1px solid #E5E7EB;background:#fff;display:flex;gap:8px;">
+      <button class="btn btn-ghost">Atrás</button>
+      <button onclick="go('createOk')" class="btn btn-primary" style="flex:1;">Continuar →</button>
+    </div>
+  `},
+
+  // 11) CREATE OK
+  { key:'createOk', label:'Iniciativa publicada', body: `
+    <div class="h-grad-green" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 22px;text-align:center;color:#fff;">
+      <div style="font-size:90px;">🎉</div>
+      <h2 style="font-size:24px;margin:14px 0 6px;font-weight:800;">¡Publicada!</h2>
+      <p style="opacity:.9;font-size:14px;max-width:280px;">Tu conversatorio ya es visible para 7 234 jóvenes en Cusco. Te notificaremos a medida que se inscriban.</p>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:14px;margin-top:20px;width:100%;text-align:left;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;"><span>Solicitud BCP Fondo Verde</span><span class="badge" style="background:#fff;color:#0E9F6E;">EN REVISIÓN</span></div>
+        <div style="opacity:.85;margin-top:4px;">Respuesta estimada: 5 días hábiles</div>
+      </div>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:14px;margin-top:10px;width:100%;text-align:left;font-size:12px;">
+        🏆 Karma ganado: <b>+30 por crear</b>
+      </div>
+      <button onclick="go('home')" class="btn btn-block" style="background:#fff;color:#0E9F6E;margin-top:24px;">Ver en mi feed</button>
+    </div>
+  `},
+
+  // 12) VOZ PUBLICA LIST
+  { key:'voz', label:'🗳️ Voz Pública', body: `
+    <div class="h-grad-blue">
+      <p style="font-size:11px;opacity:.85;margin:0;letter-spacing:.5px;">VOZ PÚBLICA · 1 DNI = 1 VOTO</p>
+      <h2 style="font-size:20px;margin:6px 0;font-weight:800;">Decide con tu comunidad</h2>
+      <p style="font-size:12px;opacity:.85;margin:0;">Consultas oficiales verificadas y propuestas ciudadanas</p>
+    </div>
+    <div style="background:#fff;padding:10px 18px;border-bottom:1px solid #E5E7EB;display:flex;gap:6px;">
+      <span class="pill-tab on">🏛️ Oficiales (3)</span>
+      <span class="pill-tab">👥 Ciudadanas (12)</span>
+      <span class="pill-tab">🔚 Cerradas</span>
+    </div>
+    <div class="scroll" style="flex:1;padding:14px;background:#F9FAFB;">
+      <div onclick="go('vote')" style="background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;border-left:4px solid #1E40AF;">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <span class="badge badge-blue">🏛️ Muni. Cusco</span>
+          <span style="font-size:10px;color:#E11D2E;font-weight:700;">⏱ 2 días</span>
+        </div>
+        <div style="font-weight:700;font-size:14px;margin-top:8px;">¿Qué obra priorizar con S/ 200 000?</div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#6B7280;margin-top:6px;">
+          <span>1 823 votos</span><span>3 opciones</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #1E40AF;">
+        <div style="display:flex;justify-content:space-between;"><span class="badge badge-blue">🏛️ MINEDU</span><span style="font-size:10px;color:#6B7280;">⏱ 8 días</span></div>
+        <div style="font-weight:700;font-size:14px;margin-top:8px;">Reforma educativa: ¿qué cambiarías?</div>
+        <div style="font-size:11px;color:#6B7280;margin-top:6px;">12 401 votos · nacional · 5 opciones</div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid #1E40AF;">
+        <div style="display:flex;justify-content:space-between;"><span class="badge badge-red">🏦 BCP</span><span style="font-size:10px;color:#6B7280;">⏱ 5 días</span></div>
+        <div style="font-weight:700;font-size:14px;margin-top:8px;">¿Qué tema priorizar en BCP Fondo Verde 2026?</div>
+        <div style="font-size:11px;color:#6B7280;margin-top:6px;">3 421 votos · nacional · 4 opciones</div>
+      </div>
+
+      <div style="margin-top:14px;text-align:center;">
+        <button onclick="go('propose')" class="btn btn-ghost btn-sm">+ Propón tú una consulta</button>
+      </div>
+    </div>
+    ${tabBar('explore')}
+  `},
+
+  // 13) VOTE
+  { key:'vote', label:'Votación activa', body: `
+    <div class="h-grad-blue">
+      <div style="display:flex;align-items:center;gap:10px;"><span onclick="go('voz')" style="cursor:pointer;font-size:20px;">←</span><span class="badge" style="background:rgba(255,255,255,.2);color:#fff;">🏛️ Municipalidad de Cusco</span></div>
+      <h2 style="font-size:18px;margin:10px 0 4px;font-weight:800;">¿Qué obra priorizar con S/ 200 000?</h2>
+      <p style="font-size:11px;opacity:.85;margin:0;">Solo jóvenes 15-29 verificados · Cierra en 2 días</p>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;background:#F9FAFB;">
+      <div class="vote-opt" style="margin-bottom:8px;">
+        <div class="empty-radio"></div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:13px;">🏞️ Renovar el parque San Blas</div>
+          <div class="prog" style="margin-top:6px;"><span style="width:42%;background:#1E40AF;"></span></div>
+        </div>
+        <span style="font-size:12px;font-weight:700;">42%</span>
+      </div>
+      <div class="vote-opt sel" style="margin-bottom:8px;">
+        <div class="empty-radio on"></div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:13px;">📚 Biblioteca digital juvenil</div>
+          <div class="prog" style="margin-top:6px;"><span style="width:38%;background:#1E40AF;"></span></div>
+        </div>
+        <span style="font-size:12px;font-weight:700;">38%</span>
+      </div>
+      <div class="vote-opt">
+        <div class="empty-radio"></div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:13px;">🎭 Casa de la cultura joven</div>
+          <div class="prog" style="margin-top:6px;"><span style="width:20%;background:#1E40AF;"></span></div>
+        </div>
+        <span style="font-size:12px;font-weight:700;">20%</span>
+      </div>
+
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px;margin-top:14px;font-size:11px;color:#1E40AF;line-height:1.5;">
+        🔒 <b>Tu voto es secreto y verificable.</b><br>1 DNI = 1 voto · Cifrado E2E · Auditable por SENAJU
+      </div>
+
+      <button onclick="go('voteOk')" class="btn btn-blue btn-block" style="margin-top:14px;">Confirmar mi voto</button>
+
+      <div style="margin-top:16px;text-align:center;font-size:11px;color:#6B7280;">
+        <b>+10 karma</b> por votar
+      </div>
+    </div>
+  `},
+
+  // 14) VOTE OK
+  { key:'voteOk', label:'Voto registrado', body: `
+    <div class="h-grad-blue" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 22px;text-align:center;color:#fff;">
+      <div style="font-size:90px;">✅</div>
+      <h2 style="font-size:24px;margin:14px 0 6px;font-weight:800;">Voto registrado</h2>
+      <p style="opacity:.9;font-size:13px;max-width:260px;">Tu voto por <b>"Biblioteca digital juvenil"</b> quedó cifrado y auditable. Recibirás resultados el 26 de mayo.</p>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:14px;margin-top:18px;width:100%;text-align:left;font-size:12px;">
+        <div style="font-family:monospace;font-size:10px;opacity:.85;">Comprobante:</div>
+        <div style="font-family:monospace;font-size:11px;margin-top:4px;">0x7f3a...c4e9 · TX#48211</div>
+      </div>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:14px;margin-top:8px;width:100%;font-size:12px;">🏆 +10 karma</div>
+      <button onclick="go('voz')" class="btn btn-block" style="background:#fff;color:#1E40AF;margin-top:24px;">Ver otras consultas</button>
+    </div>
+  `},
+
+  // 15) PROPOSE
+  { key:'propose', label:'Crear propuesta', body: `
+    <div class="app-header-back"><span class="back-btn" onclick="go('voz')">←</span> Propuesta ciudadana</div>
+    <div class="scroll" style="flex:1;padding:18px;">
+      <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:10px;padding:10px;font-size:11px;margin-bottom:14px;">
+        💡 Una propuesta necesita <b>500 apoyos verificados</b> para escalar a votación oficial.
+      </div>
+      <label style="font-size:12px;font-weight:700;">Título</label>
+      <input class="input" style="margin-top:4px;" value="Carril bici en Av. de la Cultura"/>
+      <label style="font-size:12px;font-weight:700;margin-top:12px;display:block;">¿A quién va dirigida?</label>
+      <select class="input" style="margin-top:4px;"><option>Municipalidad Distrital de Cusco</option></select>
+      <label style="font-size:12px;font-weight:700;margin-top:12px;display:block;">Categoría</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="chip">🚲 Movilidad</span><span class="chip on">🌱 Ambiente</span><span class="chip">🎭 Cultura</span><span class="chip">🛡️ Seguridad</span>
+      </div>
+      <label style="font-size:12px;font-weight:700;margin-top:12px;display:block;">Descripción</label>
+      <textarea class="input" rows="4" style="margin-top:4px;resize:none;">Construir ciclovía continua de 4 km en Av. de la Cultura, conectando UNSAAC con el Centro Histórico. Reduce contaminación y acerca a estudiantes...</textarea>
+      <button class="btn btn-primary btn-block" style="margin-top:16px;">Publicar propuesta</button>
+    </div>
+  `},
+
+  // 16) CHANNELS LIST
+  { key:'channels', label:'💬 Canales', body: `
+    <div class="h-grad-purple">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h2 style="font-size:20px;margin:0;font-weight:800;">Canales</h2>
+        <button class="btn btn-xs" style="background:rgba(255,255,255,.2);color:#fff;">+ Nuevo</button>
+      </div>
+      <input class="input" placeholder="🔍 Buscar canal..." style="margin-top:10px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:12px;"/>
+    </div>
+    <div class="scroll" style="flex:1;background:#fff;">
+      <div style="padding:10px 18px;background:#F9FAFB;font-size:11px;color:#6B7280;font-weight:700;letter-spacing:.5px;">TUS COMUNIDADES</div>
+      <div onclick="go('chat')" style="padding:12px 18px;display:flex;gap:12px;cursor:pointer;border-bottom:1px solid #F3F4F6;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;font-size:20px;">🎭</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;"><b style="font-size:13px;">Cultura Cusco · #danza</b><span style="font-size:10px;color:#6B7280;">12:42</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;"><span style="font-size:12px;color:#6B7280;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">Mariana: Ya tenemos el local 🎉</span><span style="background:#E11D2E;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:700;">5</span></div>
+        </div>
+      </div>
+      <div style="padding:12px 18px;display:flex;gap:12px;border-bottom:1px solid #F3F4F6;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:20px;">📚</div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><b style="font-size:13px;">Universitarios UNSAAC</b><span style="font-size:10px;color:#6B7280;">11:15</span></div><div style="font-size:12px;color:#6B7280;">Sebas: Comparto el documento...</div></div>
+      </div>
+      <div style="padding:12px 18px;display:flex;gap:12px;border-bottom:1px solid #F3F4F6;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:20px;">🌱</div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><b style="font-size:13px;">Cusco Ambiental</b><span style="font-size:10px;color:#6B7280;">Ayer</span></div><div style="font-size:12px;color:#6B7280;">Moderador: Reunión confirmada para...</div></div>
+      </div>
+
+      <div style="padding:10px 18px;background:#F9FAFB;font-size:11px;color:#6B7280;font-weight:700;letter-spacing:.5px;">CANALES SUGERIDOS</div>
+      <div style="padding:12px 18px;display:flex;gap:12px;align-items:center;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;font-size:20px;">💼</div>
+        <div style="flex:1;"><b style="font-size:13px;">Emprende Cusco</b><div style="font-size:11px;color:#6B7280;">421 miembros</div></div>
+        <button class="btn btn-xs btn-ghost">Unirme</button>
+      </div>
+      <div style="padding:12px 18px;display:flex;gap:12px;align-items:center;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#DBEAFE;display:flex;align-items:center;justify-content:center;font-size:20px;">🛡️</div>
+        <div style="flex:1;"><b style="font-size:13px;">Voluntariado Defensa Civil</b><div style="font-size:11px;color:#6B7280;">187 miembros</div></div>
+        <button class="btn btn-xs btn-ghost">Unirme</button>
+      </div>
+    </div>
+    ${tabBar('channels')}
+  `},
+
+  // 17) CHAT
+  { key:'chat', label:'Canal: chat', body: `
+    <div style="background:#fff;border-bottom:1px solid #E5E7EB;padding:14px 18px;padding-top:28px;display:flex;gap:10px;align-items:center;">
+      <span onclick="go('channels')" style="cursor:pointer;color:#6B7280;font-size:20px;">←</span>
+      <div style="width:36px;height:36px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;font-size:18px;">🎭</div>
+      <div style="flex:1;"><b style="font-size:13px;">Cultura Cusco · #danza</b><div style="font-size:11px;color:#0E9F6E;">● 12 en línea · 87 miembros · 🛡️ moderado</div></div>
+      <span style="color:#6B7280;">⋯</span>
+    </div>
+    <div class="scroll" style="flex:1;padding:14px;background:#F9FAFB;display:flex;flex-direction:column;">
+      <div style="text-align:center;font-size:10px;color:#9CA3AF;margin-bottom:8px;">— Hoy —</div>
+      <div style="display:flex;gap:6px;align-items:end;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FCD34D;font-size:11px;color:#92400E;display:flex;align-items:center;justify-content:center;font-weight:700;">M</div>
+        <div><div style="font-size:10px;color:#6B7280;margin-bottom:2px;">Mariana · 11:20</div><div class="bubble them">¿Quién participa el sábado en el ensayo?</div></div>
+      </div>
+      <div class="bubble me">Yo voy! ¿A qué hora?</div>
+      <div style="display:flex;gap:6px;align-items:end;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FCD34D;font-size:11px;color:#92400E;display:flex;align-items:center;justify-content:center;font-weight:700;">M</div>
+        <div><div class="bubble them">A las 4 pm en la Casa de la Cultura</div></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:end;margin-top:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#86EFAC;font-size:11px;color:#065F46;display:flex;align-items:center;justify-content:center;font-weight:700;">J</div>
+        <div><div class="bubble them" style="background:#FEF3C7;color:#92400E;">📌 <b>Aviso de moderador</b><br>Recordatorio: prohibido contenido político de campaña.</div></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:end;margin-top:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FCD34D;font-size:11px;color:#92400E;display:flex;align-items:center;justify-content:center;font-weight:700;">M</div>
+        <div><div class="bubble them">Ya tenemos el local 🎉</div><div style="font-size:10px;color:#6B7280;margin-top:2px;">12:42 ✓✓</div></div>
+      </div>
+    </div>
+    <div style="background:#fff;border-top:1px solid #E5E7EB;padding:10px 14px;display:flex;gap:8px;align-items:center;">
+      <span style="font-size:20px;">📎</span>
+      <input class="input" placeholder="Mensaje..." style="font-size:13px;padding:8px 12px;"/>
+      <span style="color:#E11D2E;font-size:22px;cursor:pointer;">➤</span>
+    </div>
+  `},
+
+  // 18) KARMA
+  { key:'karma', label:'🏆 Karma Cívico', body: `
+    <div class="h-grad-amber" style="text-align:center;padding-bottom:30px;">
+      <span onclick="go('home')" style="cursor:pointer;position:absolute;top:30px;left:18px;color:#fff;font-size:20px;">←</span>
+      <p style="font-size:11px;opacity:.85;letter-spacing:1px;margin:0;">KARMA CÍVICO</p>
+      <div style="width:130px;height:130px;border-radius:50%;margin:14px auto 0;" class="karma-ring">
+        <div style="margin:6px;width:118px;height:118px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="font-size:34px;font-weight:800;color:#D97706;">340</div>
+          <div style="font-size:10px;color:#6B7280;">/ 500 nivel 3</div>
+        </div>
+      </div>
+      <p style="font-weight:700;margin-top:14px;">🥈 Tinkuy Activo</p>
+      <p style="font-size:11px;opacity:.85;margin:2px 0 0;">Top 18% de jóvenes Cusco</p>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;background:#F9FAFB;">
+      <h3 style="font-size:13px;margin:0 0 8px;">🎁 Recompensas disponibles</h3>
+
+      <div class="reward-card" style="margin-bottom:8px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;font-size:22px;">💳</div>
+        <div style="flex:1;font-size:12px;"><b>Sin comisión BCP 6 meses</b><div style="color:#6B7280;font-size:11px;">Cuenta ahorro joven</div></div>
+        <button class="btn btn-amber btn-xs">300 ✓</button>
+      </div>
+      <div class="reward-card" style="margin-bottom:8px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:#DBEAFE;display:flex;align-items:center;justify-content:center;font-size:22px;">🎓</div>
+        <div style="flex:1;font-size:12px;"><b>Beca Pacífico Liderazgo</b><div style="color:#6B7280;font-size:11px;">40 horas · certificable</div></div>
+        <button class="btn btn-xs" style="background:#E5E7EB;color:#6B7280;">800</button>
+      </div>
+      <div class="reward-card" style="margin-bottom:8px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:22px;">📜</div>
+        <div style="flex:1;font-size:12px;"><b>Carta de recomendación</b><div style="color:#6B7280;font-size:11px;">Verificada BCP + SENAJU</div></div>
+        <button class="btn btn-amber btn-xs">200 ✓</button>
+      </div>
+      <div class="reward-card" style="margin-bottom:8px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:22px;">🎟️</div>
+        <div style="flex:1;font-size:12px;"><b>Entrada Hay Festival</b><div style="color:#6B7280;font-size:11px;">2 días Arequipa</div></div>
+        <button class="btn btn-xs" style="background:#E5E7EB;color:#6B7280;">650</button>
+      </div>
+
+      <h3 style="font-size:13px;margin:16px 0 8px;">🏅 Logros</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;">
+        <div class="ach-card"><div class="ico">🌱</div><div style="font-size:9px;font-weight:700;margin-top:2px;">Eco x5</div></div>
+        <div class="ach-card"><div class="ico">🗳️</div><div style="font-size:9px;font-weight:700;margin-top:2px;">Votó x10</div></div>
+        <div class="ach-card"><div class="ico">🎤</div><div style="font-size:9px;font-weight:700;margin-top:2px;">Líder</div></div>
+        <div class="ach-card" style="opacity:.3;"><div class="ico">🌟</div><div style="font-size:9px;font-weight:700;margin-top:2px;">Top10</div></div>
+      </div>
+
+      <h3 style="font-size:13px;margin:16px 0 8px;">📜 Historial</h3>
+      <div style="background:#fff;border-radius:10px;border:1px solid #E5E7EB;font-size:12px;">
+        <div style="padding:10px;display:flex;justify-content:space-between;border-bottom:1px solid #F3F4F6;"><span>✅ Reforestación Sacsayhuamán</span><b style="color:#0E9F6E;">+50</b></div>
+        <div style="padding:10px;display:flex;justify-content:space-between;border-bottom:1px solid #F3F4F6;"><span>✅ Voto consulta municipalidad</span><b style="color:#0E9F6E;">+10</b></div>
+        <div style="padding:10px;display:flex;justify-content:space-between;"><span>✅ Crear conversatorio</span><b style="color:#0E9F6E;">+30</b></div>
+      </div>
+    </div>
+  `},
+
+  // 19) FONDO
+  { key:'fondo', label:'💰 Tinkuy Fondo', body: `
+    <div class="h-grad-amber">
+      <span onclick="go('home')" style="cursor:pointer;position:absolute;top:30px;left:18px;color:#fff;font-size:20px;">←</span>
+      <p style="font-size:11px;opacity:.85;margin:0;text-align:center;">TINKUY FONDO · BCP</p>
+      <h2 style="font-size:20px;margin:6px 0;font-weight:800;text-align:center;">Microfinanciamiento</h2>
+      <p style="font-size:11px;opacity:.85;text-align:center;margin:0;">Hasta S/ 3 000 sin garantía para tu iniciativa</p>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;background:#F9FAFB;">
+      <div class="card" style="margin-bottom:12px;">
+        <span class="badge badge-amber">📥 EN REVISIÓN</span>
+        <div style="font-weight:700;margin-top:8px;">Conversatorio cambio climático</div>
+        <div style="font-size:11px;color:#6B7280;margin-top:2px;">Solicitado: S/ 1 200 · enviado hoy</div>
+        <div class="prog" style="margin-top:10px;"><span style="width:40%;background:#F59E0B;"></span></div>
+        <div style="font-size:10px;color:#6B7280;margin-top:6px;display:flex;justify-content:space-between;"><span>✓ Documentos</span><span>● Comité BCP</span><span>○ Desembolso</span></div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <span class="badge badge-green">✅ DESEMBOLSADO</span>
+        <div style="font-weight:700;margin-top:8px;">Taller robótica para escolares</div>
+        <div style="font-size:11px;color:#6B7280;margin-top:2px;">S/ 2 500 · vía Yape · 14 mar</div>
+        <button class="btn btn-ghost btn-xs" style="margin-top:8px;">Rendir cuentas</button>
+      </div>
+
+      <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:12px;padding:14px;margin-top:12px;">
+        <b style="font-size:13px;">💡 Cómo funciona</b>
+        <ol style="font-size:11px;color:#92400E;padding-left:16px;margin:6px 0 0;line-height:1.6;">
+          <li>Publica tu iniciativa con detalle de presupuesto.</li>
+          <li>Tinkuy IA evalúa y la deriva al fondo correcto.</li>
+          <li>Comité BCP responde en 5 días hábiles.</li>
+          <li>Desembolso directo a tu Yape.</li>
+          <li>Rinde cuentas con fotos y facturas digitales.</li>
+        </ol>
+      </div>
+
+      <h3 style="font-size:13px;margin:16px 0 8px;">Fondos disponibles</h3>
+      <div style="display:flex;gap:6px;flex-direction:column;">
+        <div class="card" style="display:flex;gap:10px;align-items:center;padding:10px;"><span style="font-size:22px;">🌱</span><div style="flex:1;font-size:12px;"><b>BCP Jóvenes Verdes</b><div style="color:#6B7280;font-size:11px;">Hasta S/ 3 000 · Ambiente</div></div></div>
+        <div class="card" style="display:flex;gap:10px;align-items:center;padding:10px;"><span style="font-size:22px;">🎓</span><div style="flex:1;font-size:12px;"><b>Educa MINEDU</b><div style="color:#6B7280;font-size:11px;">Hasta S/ 1 500 · Educación</div></div></div>
+        <div class="card" style="display:flex;gap:10px;align-items:center;padding:10px;"><span style="font-size:22px;">💼</span><div style="flex:1;font-size:12px;"><b>BCP Emprende Joven</b><div style="color:#6B7280;font-size:11px;">Hasta S/ 5 000 · Negocio</div></div></div>
+      </div>
+    </div>
+  `},
+
+  // 20) CUIDATE
+  { key:'cuidate', label:'💚 Cuídate', body: `
+    <div class="h-grad-teal">
+      <span onclick="go('home')" style="cursor:pointer;position:absolute;top:30px;left:18px;color:#fff;font-size:20px;">←</span>
+      <p style="font-size:11px;opacity:.85;margin:0;text-align:center;">CUÍDATE · SALUD EMOCIONAL</p>
+      <h2 style="font-size:22px;margin:6px 0;font-weight:800;text-align:center;">No estás solo/a 💚</h2>
+      <p style="font-size:11px;opacity:.85;text-align:center;margin:0;">Gratuito y confidencial · MINSA + Col. de Psicólogos</p>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;background:#F9FAFB;">
+      <button onclick="go('psicoChat')" class="btn" style="width:100%;background:#E11D2E;color:#fff;padding:14px;margin-bottom:8px;">📞 Línea 113 · Llamar ahora</button>
+      <button onclick="go('psicoChat')" class="btn" style="width:100%;background:#0F766E;color:#fff;padding:14px;margin-bottom:14px;">💬 Chat con psicólogo (anónimo)</button>
+
+      <div class="card" style="background:linear-gradient(135deg,#fff,#F0FDFA);">
+        <b style="font-size:13px;">🧭 Test rápido de bienestar</b>
+        <p style="font-size:11px;color:#6B7280;margin:4px 0 8px;">5 preguntas · 2 minutos · 100% privado</p>
+        <button class="btn btn-green btn-sm btn-block">Empezar test</button>
+      </div>
+
+      <h3 style="font-size:13px;margin:16px 0 8px;">📖 Recursos para ti</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="card" style="padding:12px;"><div style="font-size:24px;">🌙</div><b style="font-size:12px;">Dormir mejor</b><div style="font-size:10px;color:#6B7280;">3 min · lectura</div></div>
+        <div class="card" style="padding:12px;"><div style="font-size:24px;">😰</div><b style="font-size:12px;">Manejar ansiedad</b><div style="font-size:10px;color:#6B7280;">4 min · video</div></div>
+        <div class="card" style="padding:12px;"><div style="font-size:24px;">👥</div><b style="font-size:12px;">Hablar con familia</b><div style="font-size:10px;color:#6B7280;">guía paso a paso</div></div>
+        <div class="card" style="padding:12px;"><div style="font-size:24px;">🧘</div><b style="font-size:12px;">Respiración 4-7-8</b><div style="font-size:10px;color:#6B7280;">audio guiado</div></div>
+      </div>
+
+      <div style="margin-top:14px;padding:12px;background:#FEE2E2;border-radius:10px;font-size:11px;color:#B91C1C;text-align:center;">
+        🚨 Si estás en crisis: <b>Línea 113 opción 5</b> · 24/7 · gratuito
+      </div>
+    </div>
+  `},
+
+  // 21) PSICO CHAT
+  { key:'psicoChat', label:'Chat anónimo psicólogo', body: `
+    <div style="background:#0F766E;color:#fff;padding:14px 18px;padding-top:28px;display:flex;gap:10px;align-items:center;">
+      <span onclick="go('cuidate')" style="cursor:pointer;font-size:20px;">←</span>
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;">👩‍⚕️</div>
+      <div style="flex:1;"><b style="font-size:13px;">Psic. Andrea M.</b><div style="font-size:11px;opacity:.85;">● En línea · CPSP 12483 · Anónimo</div></div>
+    </div>
+    <div class="scroll" style="flex:1;padding:14px;background:#F0FDFA;display:flex;flex-direction:column;">
+      <div style="text-align:center;font-size:10px;color:#6B7280;margin-bottom:8px;">Conversación cifrada · sin registro en tu perfil</div>
+      <div class="bubble them">Hola, soy Andrea, psicóloga. Este espacio es seguro y completamente anónimo. ¿Cómo te sientes hoy? 💚</div>
+      <div class="bubble me">Hola, últimamente me siento agotada con la universidad y mi familia...</div>
+      <div class="bubble them">Gracias por compartir. Es válido sentirse así. ¿Quieres contarme un poco más?</div>
+      <div class="bubble them" style="background:#FEF3C7;color:#92400E;">📎 Te comparto un recurso: <u>Manejo del estrés académico</u></div>
+    </div>
+    <div style="background:#fff;border-top:1px solid #E5E7EB;padding:10px 14px;display:flex;gap:8px;">
+      <input class="input" placeholder="Escribe sin presión..." style="font-size:13px;padding:8px 12px;"/>
+      <span style="color:#0F766E;font-size:22px;cursor:pointer;align-self:center;">➤</span>
+    </div>
+  `},
+
+  // 22) MENTORS
+  { key:'mentors', label:'🎓 Mentorías', body: `
+    <div class="h-grad-pink">
+      <span onclick="go('profile')" style="cursor:pointer;position:absolute;top:30px;left:18px;color:#fff;font-size:20px;">←</span>
+      <p style="font-size:11px;opacity:.85;margin:0;text-align:center;">MENTORÍAS</p>
+      <h2 style="font-size:20px;margin:6px 0;font-weight:800;text-align:center;">Aprende de quien ya lo hizo</h2>
+    </div>
+    <div style="background:#fff;padding:10px 18px;border-bottom:1px solid #E5E7EB;display:flex;gap:6px;overflow-x:auto;">
+      <span class="pill-tab on">Todos</span><span class="pill-tab">Liderazgo</span><span class="pill-tab">Emprendim.</span><span class="pill-tab">Política</span><span class="pill-tab">Arte</span>
+    </div>
+    <div class="scroll" style="flex:1;padding:14px;background:#F9FAFB;">
+      <div class="card" style="margin-bottom:10px;display:flex;gap:12px;">
+        <div style="width:54px;height:54px;border-radius:50%;background:#FCE7F3;display:flex;align-items:center;justify-content:center;font-size:24px;">👩‍🏫</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:start;"><b style="font-size:13px;">Lucía Vargas</b><span class="badge badge-green">● libre</span></div>
+          <div style="font-size:11px;color:#6B7280;">Líder de Causa · 8 años de exp.</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">⭐ 4.9 · 42 mentorías</div>
+          <button class="btn btn-xs btn-primary" style="margin-top:6px;">Agendar 30 min</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:10px;display:flex;gap:12px;">
+        <div style="width:54px;height:54px;border-radius:50%;background:#DBEAFE;display:flex;align-items:center;justify-content:center;font-size:24px;">👨‍💼</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b style="font-size:13px;">Carlos Quispe</b><span class="badge badge-amber">2 días</span></div>
+          <div style="font-size:11px;color:#6B7280;">Emprendedor BCP Mibanco</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">⭐ 4.8 · 28 mentorías</div>
+          <button class="btn btn-xs btn-ghost" style="margin-top:6px;">Ver perfil</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:10px;display:flex;gap:12px;">
+        <div style="width:54px;height:54px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:24px;">👨‍🎨</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;"><b style="font-size:13px;">Renzo Apaza</b><span class="badge badge-green">● libre</span></div>
+          <div style="font-size:11px;color:#6B7280;">Director Festival Cusco</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">⭐ 5.0 · 19 mentorías</div>
+          <button class="btn btn-xs btn-primary" style="margin-top:6px;">Agendar 30 min</button>
+        </div>
+      </div>
+    </div>
+  `},
+
+  // 23) NOTIF
+  { key:'notif', label:'🔔 Notificaciones', body: `
+    <div class="app-header-back"><span class="back-btn" onclick="go('home')">←</span>Notificaciones</div>
+    <div class="scroll" style="flex:1;background:#fff;">
+      <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;gap:12px;align-items:start;background:#FEF2F2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;font-size:18px;">💰</div>
+        <div style="flex:1;"><b style="font-size:13px;">¡Tu solicitud avanza!</b><div style="font-size:12px;color:#4B5563;">BCP Fondo Verde revisó tu propuesta. Falta aprobación final.</div><div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Hace 12 min</div></div>
+      </div>
+      <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;gap:12px;align-items:start;background:#FEF2F2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#DBEAFE;display:flex;align-items:center;justify-content:center;font-size:18px;">🗳️</div>
+        <div style="flex:1;"><b style="font-size:13px;">Nueva consulta MINEDU</b><div style="font-size:12px;color:#4B5563;">Reforma educativa: ¿qué cambiarías? · Cierra en 8 días</div><div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Hace 1 h</div></div>
+      </div>
+      <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;gap:12px;align-items:start;background:#FEF2F2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;font-size:18px;">🌱</div>
+        <div style="flex:1;"><b style="font-size:13px;">¡Te falta poco!</b><div style="font-size:12px;color:#4B5563;">+160 puntos para tu próxima recompensa BCP</div><div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Hace 3 h</div></div>
+      </div>
+      <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;gap:12px;align-items:start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;font-size:18px;">🎭</div>
+        <div style="flex:1;"><b style="font-size:13px;">Mariana te mencionó</b><div style="font-size:12px;color:#4B5563;">"@CamilaQ ¿confirmas para el sábado?"</div><div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Ayer</div></div>
+      </div>
+      <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;gap:12px;align-items:start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:18px;">⭐</div>
+        <div style="flex:1;"><b style="font-size:13px;">Nuevo logro: Eco x5</b><div style="font-size:12px;color:#4B5563;">Participaste en 5 jornadas ambientales</div><div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Hace 2 días</div></div>
+      </div>
+    </div>
+  `},
+
+  // 24) PROFILE
+  { key:'profile', label:'👤 Perfil', body: `
+    <div class="h-grad-red" style="text-align:center;padding-bottom:30px;">
+      <div style="width:90px;height:90px;border-radius:50%;background:#FCD34D;margin:14px auto 0;display:flex;align-items:center;justify-content:center;color:#92400E;font-weight:800;font-size:34px;border:4px solid #fff;">CR</div>
+      <h2 style="margin:10px 0 2px;font-size:20px;font-weight:800;">Camila R. Quispe</h2>
+      <p style="margin:0;font-size:12px;opacity:.85;">📍 Cusco · 19 años · 🎓 UNSAAC</p>
+      <p style="margin:4px 0 0;"><span class="badge" style="background:#fff;color:#E11D2E;">✓ VERIFICADA RENIEC</span></p>
+    </div>
+    <div class="scroll" style="flex:1;padding:18px;background:#F9FAFB;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+        <div class="card" style="padding:10px;"><div style="font-size:18px;font-weight:800;color:#D97706;">340</div><div style="font-size:10px;color:#6B7280;">Karma</div></div>
+        <div class="card" style="padding:10px;"><div style="font-size:18px;font-weight:800;color:#0E9F6E;">12</div><div style="font-size:10px;color:#6B7280;">Eventos</div></div>
+        <div class="card" style="padding:10px;"><div style="font-size:18px;font-weight:800;color:#1E40AF;">8</div><div style="font-size:10px;color:#6B7280;">Votos</div></div>
+      </div>
+
+      <div onclick="go('mentors')" style="margin-top:12px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+        <span style="font-size:22px;">🎓</span><div style="flex:1;font-size:13px;"><b>Mis mentorías</b><div style="font-size:11px;color:#6B7280;">2 sesiones agendadas</div></div><span style="color:#9CA3AF;">›</span>
+      </div>
+      <div onclick="go('fondo')" style="margin-top:8px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+        <span style="font-size:22px;">💰</span><div style="flex:1;font-size:13px;"><b>Mis solicitudes Fondo</b><div style="font-size:11px;color:#6B7280;">1 en revisión · 1 desembolsado</div></div><span style="color:#9CA3AF;">›</span>
+      </div>
+      <div style="margin-top:8px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;">
+        <span style="font-size:22px;">📜</span><div style="flex:1;font-size:13px;"><b>Mis certificados</b><div style="font-size:11px;color:#6B7280;">3 disponibles · descargables</div></div><span style="color:#9CA3AF;">›</span>
+      </div>
+      <div onclick="go('cuidate')" style="margin-top:8px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+        <span style="font-size:22px;">💚</span><div style="flex:1;font-size:13px;"><b>Cuídate</b><div style="font-size:11px;color:#6B7280;">Espacio de bienestar emocional</div></div><span style="color:#9CA3AF;">›</span>
+      </div>
+      <div onclick="go('settings')" style="margin-top:8px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+        <span style="font-size:22px;">⚙️</span><div style="flex:1;font-size:13px;"><b>Ajustes y privacidad</b></div><span style="color:#9CA3AF;">›</span>
+      </div>
+    </div>
+    ${tabBar('profile')}
+  `},
+
+  // 25) SETTINGS
+  { key:'settings', label:'⚙️ Ajustes y privacidad', body: `
+    <div class="app-header-back"><span class="back-btn" onclick="go('profile')">←</span>Ajustes y privacidad</div>
+    <div class="scroll" style="flex:1;padding:0;background:#F9FAFB;">
+      <div style="padding:14px 18px;font-size:11px;color:#6B7280;font-weight:700;letter-spacing:.5px;">PRIVACIDAD (LEY 29733)</div>
+      <div style="background:#fff;">
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;align-items:center;font-size:13px;"><div><b>Mostrar mi ubicación</b><div style="font-size:11px;color:#6B7280;">Solo a nivel distrito</div></div><div style="width:38px;height:22px;background:#0E9F6E;border-radius:999px;position:relative;"><div style="position:absolute;right:2px;top:2px;width:18px;height:18px;background:#fff;border-radius:50%;"></div></div></div>
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;align-items:center;font-size:13px;"><div><b>Compartir data anónima</b><div style="font-size:11px;color:#6B7280;">Para mejorar Tinkuy Mapa</div></div><div style="width:38px;height:22px;background:#0E9F6E;border-radius:999px;position:relative;"><div style="position:absolute;right:2px;top:2px;width:18px;height:18px;background:#fff;border-radius:50%;"></div></div></div>
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;align-items:center;font-size:13px;"><div><b>Perfil público</b><div style="font-size:11px;color:#6B7280;">Otros jóvenes pueden encontrarte</div></div><div style="width:38px;height:22px;background:#D1D5DB;border-radius:999px;position:relative;"><div style="position:absolute;left:2px;top:2px;width:18px;height:18px;background:#fff;border-radius:50%;"></div></div></div>
+      </div>
+
+      <div style="padding:14px 18px;font-size:11px;color:#6B7280;font-weight:700;letter-spacing:.5px;">NOTIFICACIONES</div>
+      <div style="background:#fff;">
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;font-size:13px;"><span>Eventos cerca de mí</span><span style="color:#0E9F6E;">●</span></div>
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;font-size:13px;"><span>Consultas oficiales</span><span style="color:#0E9F6E;">●</span></div>
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;font-size:13px;"><span>Mis canales</span><span style="color:#0E9F6E;">●</span></div>
+      </div>
+
+      <div style="padding:14px 18px;font-size:11px;color:#6B7280;font-weight:700;letter-spacing:.5px;">DATOS Y CUENTA</div>
+      <div style="background:#fff;">
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;font-size:13px;display:flex;justify-content:space-between;"><span>Descargar mis datos</span><span style="color:#9CA3AF;">›</span></div>
+        <div style="padding:14px 18px;border-bottom:1px solid #F3F4F6;font-size:13px;display:flex;justify-content:space-between;"><span>Idioma · Castellano</span><span style="color:#9CA3AF;">›</span></div>
+        <div style="padding:14px 18px;font-size:13px;display:flex;justify-content:space-between;color:#E11D2E;"><span>Eliminar mi cuenta</span><span>›</span></div>
+      </div>
+      <div style="padding:24px;text-align:center;font-size:11px;color:#9CA3AF;">Tinkuy v1.0 · Cumple Ley 29733 PDP</div>
+    </div>
+  `},
+];
+
+function tabBar(active){
+  const tabs = [['home','🏠','Inicio'],['explore','🗺️','Explorar'],['create','➕','Crear'],['channels','💬','Canales'],['profile','👤','Perfil']];
+  return `<div class="tabbar">${tabs.map(([k,i,l])=>`<div class="t ${active===k?'on':''}" onclick="go('${k}')"><div class="ic">${i}</div>${l}</div>`).join('')}</div>`;
+}
+
+// ---- render ----
+function renderAll(){
+  const root = document.getElementById('screens');
+  root.innerHTML = screens.map(s=>`
+    <div class="screen-pick">
+      <div class="phone">
+        <div class="phone-screen" id="phone-${s.key}">${s.body}</div>
+      </div>
+      <div class="label">${s.label}</div>
+    </div>
+  `).join('');
+  const menu = document.getElementById('menu');
+  menu.innerHTML = screens.map(s=>`<span class="chip" style="font-size:11px;padding:5px 10px;" onclick="scrollTo('${s.key}')">${s.label}</span>`).join('');
+}
+function toggleMenu(){
+  const panel = document.getElementById('menu');
+  const icon = document.getElementById('menu-icon');
+  panel.classList.toggle('open');
+  icon.textContent = panel.classList.contains('open') ? '✕' : '☰';
+}
+function go(key){
+  // open in single phone view - replicate to all phones for simplicity: just scroll to that one
+  scrollTo(key);
+}
+function scrollTo(key){
+  const el = document.getElementById('phone-'+key);
+  if(el) el.closest('.screen-pick').scrollIntoView({behavior:'smooth',block:'center'});
+}
+renderAll();
+</script>
+</body>
+</html>
