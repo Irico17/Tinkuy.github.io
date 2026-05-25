@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{font-family:'Inter',sans-serif;background:#E5E7EB;color:#111827;line-height:1.5;}
@@ -14,132 +15,171 @@
   .page{
     width:1056px;height:816px;margin:24px auto;background:#fff;
     box-shadow:0 8px 30px rgba(0,0,0,.15);
-    padding:60px 70px;display:flex;flex-direction:column;position:relative;
+    padding:54px 64px;display:flex;flex-direction:column;position:relative;
     overflow:hidden;page-break-after:always;break-after:page;
   }
   .page:last-child{page-break-after:auto;}
 
   /* Page header chip */
-  .ptag{display:inline-block;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:#FEE2E2;color:#B91C1C;margin-bottom:18px;}
+  .ptag{display:inline-block;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:#FEE2E2;color:#B91C1C;margin-bottom:16px;}
   .ptag.blue{background:#DBEAFE;color:#1E40AF;}
   .ptag.green{background:#D1FAE5;color:#065F46;}
   .ptag.purple{background:#EDE9FE;color:#5B21B6;}
   .ptag.amber{background:#FEF3C7;color:#92400E;}
   .ptag.dark{background:rgba(255,255,255,.15);color:#fff;}
 
-  h1.title{font-size:54px;font-weight:900;letter-spacing:-1.5px;line-height:1.05;margin-bottom:18px;}
-  h2.subtitle{font-size:22px;font-weight:600;color:#6B7280;margin-bottom:30px;line-height:1.4;}
+  h1.title{font-size:50px;font-weight:900;letter-spacing:-1.5px;line-height:1.05;margin-bottom:14px;}
+  h2.subtitle{font-size:20px;font-weight:500;color:#6B7280;margin-bottom:24px;line-height:1.4;}
 
   /* Page number */
-  .pnum{position:absolute;bottom:24px;right:30px;font-size:11px;color:#9CA3AF;font-weight:600;}
-  .pbrand{position:absolute;bottom:24px;left:30px;font-size:11px;color:#9CA3AF;font-weight:600;display:flex;align-items:center;gap:8px;}
+  .pnum{position:absolute;bottom:22px;right:28px;font-size:11px;color:#9CA3AF;font-weight:600;}
+  .pbrand{position:absolute;bottom:22px;left:28px;font-size:11px;color:#9CA3AF;font-weight:600;display:flex;align-items:center;gap:8px;}
   .pbrand .dot{width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#E11D2E,#F59E0B,#10B981);}
+
+  /* Lucide icon helper */
+  .i{display:inline-flex;align-items:center;justify-content:center;}
+  .i svg{stroke-width:2;}
 
   /* Helpers */
   .grad{background:linear-gradient(90deg,#E11D2E,#F59E0B,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .center{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;flex:1;}
 
   /* SLIDE 1 — COVER */
-  .cover{background:radial-gradient(circle at 25% 75%,#1F2937 0%,#0B0F19 70%);color:#fff;text-align:center;justify-content:center;}
+  .cover{background:radial-gradient(circle at 25% 75%,#1F2937 0%,#0B0F19 70%);color:#fff;text-align:center;justify-content:center;align-items:center;}
   .cover::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 80% 30%,rgba(245,158,11,.18),transparent 50%),radial-gradient(circle at 20% 80%,rgba(225,29,46,.18),transparent 50%);pointer-events:none;}
-  .cover-logo{font-size:140px;line-height:1;margin-bottom:14px;position:relative;}
+  .cover-logo{width:140px;height:140px;border-radius:36px;background:linear-gradient(135deg,#E11D2E,#F59E0B 50%,#10B981);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;box-shadow:0 20px 60px rgba(225,29,46,.4);position:relative;}
+  .cover-logo svg{stroke:#fff;width:78px;height:78px;stroke-width:2;}
   .cover h1{font-size:120px;font-weight:900;letter-spacing:-4px;line-height:1;position:relative;}
-  .cover .q{font-size:16px;letter-spacing:8px;text-transform:uppercase;opacity:.65;margin:18px 0 28px;font-weight:600;}
-  .cover .lead{font-size:26px;max-width:780px;margin:0 auto;line-height:1.4;font-weight:500;position:relative;}
-  .cover .ctx{position:absolute;top:50px;left:0;right:0;display:flex;justify-content:space-between;padding:0 70px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;opacity:.6;}
+  .cover .q{font-size:14px;letter-spacing:8px;text-transform:uppercase;opacity:.65;margin:14px 0 24px;font-weight:600;}
+  .cover .lead{font-size:24px;max-width:780px;margin:0 auto;line-height:1.4;font-weight:500;position:relative;}
+  .cover .ctx{position:absolute;top:44px;left:0;right:0;display:flex;justify-content:space-between;padding:0 64px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;opacity:.6;}
 
   /* SLIDE 2 — Hook stat */
-  .hook{background:#0B0F19;color:#fff;text-align:center;justify-content:center;}
-  .hook .num{font-size:260px;font-weight:900;line-height:1;background:linear-gradient(180deg,#E11D2E,#F59E0B);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .hook .lbl{font-size:36px;font-weight:800;margin-top:10px;max-width:820px;}
+  .hook{background:#0B0F19;color:#fff;text-align:center;justify-content:center;align-items:center;}
+  .hook .num{font-size:240px;font-weight:900;line-height:1;background:linear-gradient(180deg,#E11D2E,#F59E0B);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hook .lbl{font-size:34px;font-weight:800;margin-top:10px;max-width:820px;}
   .hook .src{font-size:14px;color:#9CA3AF;margin-top:16px;}
-
-  /* Generic dark slide */
-  .dark{background:#0B0F19;color:#fff;}
-  .dark h1.title{color:#fff;}
-  .dark h2.subtitle{color:#9CA3AF;}
 
   /* DATA CARDS */
   .data-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:6px;}
-  .data-c{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:18px;padding:24px;display:flex;gap:18px;align-items:center;}
-  .data-c .big{font-size:64px;font-weight:900;line-height:1;flex-shrink:0;width:170px;}
-  .data-c .txt{font-size:15px;color:#374151;line-height:1.45;}
+  .data-c{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:18px;padding:22px;display:flex;gap:18px;align-items:center;}
+  .data-c .big{font-size:60px;font-weight:900;line-height:1;flex-shrink:0;width:160px;}
+  .data-c .txt{font-size:14px;color:#374151;line-height:1.45;}
   .data-c .txt small{display:block;color:#9CA3AF;font-size:11px;margin-top:6px;}
 
   /* SOLUTION INTRO */
-  .sol{background:linear-gradient(135deg,#E11D2E 0%,#F59E0B 50%,#0E9F6E 100%);color:#fff;text-align:center;justify-content:center;}
-  .sol .name{font-size:180px;font-weight:900;letter-spacing:-5px;line-height:.95;}
-  .sol .quechua{font-size:14px;letter-spacing:6px;text-transform:uppercase;opacity:.8;margin:10px 0 22px;font-weight:600;}
-  .sol .tag{font-size:28px;font-weight:600;max-width:820px;line-height:1.4;}
-  .sol .pills{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap;}
-  .sol .pill{background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3);padding:12px 22px;border-radius:999px;font-size:15px;font-weight:700;}
+  .sol{background:linear-gradient(135deg,#E11D2E 0%,#F59E0B 50%,#0E9F6E 100%);color:#fff;text-align:center;justify-content:center;align-items:center;}
+  .sol .name{font-size:170px;font-weight:900;letter-spacing:-5px;line-height:.95;}
+  .sol .quechua{font-size:13px;letter-spacing:6px;text-transform:uppercase;opacity:.85;margin:10px 0 20px;font-weight:600;}
+  .sol .tag{font-size:26px;font-weight:500;max-width:820px;line-height:1.4;}
+  .sol .pills{display:flex;gap:12px;justify-content:center;margin-top:34px;flex-wrap:wrap;}
+  .sol .pill{background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3);padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;}
+  .sol .pill svg{width:18px;height:18px;}
 
-  /* THREE PRODUCTS */
-  .prod-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:6px;}
-  .prod{background:#fff;border:1px solid #E5E7EB;border-radius:18px;padding:24px;display:flex;flex-direction:column;}
-  .prod .ic{width:70px;height:70px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:14px;}
-  .prod h3{font-size:22px;font-weight:800;margin-bottom:6px;}
-  .prod .who{font-size:12px;color:#9CA3AF;text-transform:uppercase;font-weight:700;letter-spacing:.5px;margin-bottom:10px;}
-  .prod ul{list-style:none;padding:0;font-size:13px;color:#374151;line-height:1.7;}
-  .prod ul li{padding-left:18px;position:relative;}
-  .prod ul li::before{content:"✓";position:absolute;left:0;color:#10B981;font-weight:800;}
-  .prod.app .ic{background:#FEF3C7;}
-  .prod.mapa .ic{background:#DBEAFE;}
-  .prod.conecta .ic{background:#D1FAE5;}
+  /* ——— PRODUCT SLIDES (5/6/7) ——— */
+  .ps{display:flex;gap:18px;flex:1;margin-top:6px;}
+  .ps-info{display:flex;flex-direction:column;gap:7px;}
+  .ps-feat{display:flex;gap:10px;align-items:flex-start;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:9px 12px;}
+  .ps-feat .icb{width:36px;height:36px;border-radius:9px;border:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ps-feat .icb svg{width:19px;height:19px;}
+  .ps-feat h4{font-size:13px;font-weight:800;margin-bottom:2px;color:#111827;}
+  .ps-feat p{font-size:12.5px;color:#6B7280;line-height:1.35;}
+  .ps-feat.amb .icb{background:#FEF3C7;border-color:#FCD34D;color:#92400E;}
+  .ps-feat.blu .icb{background:#DBEAFE;border-color:#93C5FD;color:#1E40AF;}
+  .ps-feat.grn .icb{background:#D1FAE5;border-color:#6EE7B7;color:#065F46;}
+  /* App slide — phone 3-col grid */
+  .app-phones{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1;}
+  .app-p .fr{background:#0B0F19;border-radius:14px;overflow:hidden;padding:4px;}
+  .app-p .fr img{width:100%;display:block;border-radius:11px;}
+  .app-p .cap{font-size:11px;font-weight:700;color:#374151;text-align:center;margin-top:4px;line-height:1.2;}
+  .app-p .cap small{color:#9CA3AF;font-weight:500;font-size:10px;display:block;}
+  /* Mapa slide — screenshot frames */
+  .mf{background:#0B0F19;border-radius:12px;overflow:hidden;}
+  .mf img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* Conecta slide — nokia big */
+  .nokia-big{background:#111;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:8px;}
+  .nokia-big img{max-height:100%;max-width:100%;object-fit:contain;border-radius:12px;}
 
-  /* FEATURES GRID */
-  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px;flex:1;}
-  .feat{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:14px;padding:18px;}
-  .feat .em{font-size:30px;margin-bottom:8px;}
+  /* SCREENSHOT SHOWCASE — App in action */
+  .show-app{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;flex:1;margin-top:8px;align-items:start;}
+  .phone-card{display:flex;flex-direction:column;align-items:center;}
+  .phone-frame{width:100%;background:#0B0F19;border-radius:18px;padding:5px;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+  .phone-frame img{width:100%;display:block;border-radius:14px;}
+  .phone-cap{margin-top:8px;font-size:11px;font-weight:700;color:#374151;text-align:center;line-height:1.3;}
+  .phone-cap small{display:block;color:#9CA3AF;font-weight:500;font-size:10px;margin-top:2px;}
+
+  /* SHOWCASE — Panels */
+  .show-panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;margin-top:8px;}
+  .panel-card{display:flex;flex-direction:column;}
+  .panel-frame{background:#0B0F19;border-radius:14px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.2);}
+  .panel-frame img{width:100%;display:block;border-radius:10px;}
+  .panel-cap{margin-top:10px;font-size:13px;font-weight:700;color:#111827;}
+  .panel-cap small{display:block;color:#6B7280;font-weight:500;font-size:13px;margin-top:2px;}
+
+  /* FEATURES GRID — with mini icon */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px;flex:1;}
+  .feat{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:14px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
+  .feat .icb{width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#E11D2E;}
+  .feat .icb svg{width:22px;height:22px;}
   .feat h4{font-size:15px;font-weight:800;margin-bottom:4px;color:#111827;}
-  .feat p{font-size:12px;color:#6B7280;line-height:1.5;}
+  .feat p{font-size:14px;color:#6B7280;line-height:1.5;}
 
   /* SURVEY */
   .survey-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px;}
   .surv{background:linear-gradient(135deg,#F9FAFB,#fff);border:1px solid #E5E7EB;border-radius:16px;padding:22px;text-align:center;}
-  .surv .pct{font-size:48px;font-weight:900;line-height:1;}
-  .surv .q{font-size:12px;color:#374151;margin-top:8px;line-height:1.4;font-weight:600;}
-  .survey-meta{background:#F0FDF4;border:1px dashed #86EFAC;border-radius:12px;padding:14px 20px;font-size:13px;color:#065F46;margin-top:24px;text-align:center;}
+  .surv .pct{font-size:46px;font-weight:900;line-height:1;}
+  .surv .q{font-size:14px;color:#374151;margin-top:8px;line-height:1.4;font-weight:600;}
+  .survey-meta{background:#F0FDF4;border:1px dashed #86EFAC;border-radius:12px;padding:14px 20px;font-size:14px;color:#065F46;margin-top:22px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .survey-meta svg{width:18px;height:18px;}
 
   /* ROADMAP */
-  .rm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:10px;flex:1;}
-  .rm{background:#F9FAFB;border-top:5px solid;border-radius:14px;padding:22px;display:flex;flex-direction:column;}
-  .rm .ph{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
-  .rm h4{font-size:18px;font-weight:800;margin-bottom:8px;}
-  .rm p{font-size:13px;color:#374151;line-height:1.5;flex:1;}
+  .rm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px;}
+  .rm{background:#F9FAFB;border-top:5px solid;border-radius:14px;padding:20px;display:flex;flex-direction:column;}
+  .rm .ph{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+  .rm h4{font-size:17px;font-weight:800;margin-bottom:8px;}
+  .rm p{font-size:13px;color:#374151;line-height:1.55;flex:1;}
   .rm.s1{border-color:#E11D2E;}.rm.s1 .ph{color:#B91C1C;}
   .rm.s2{border-color:#F59E0B;}.rm.s2 .ph{color:#92400E;}
   .rm.s3{border-color:#10B981;}.rm.s3 .ph{color:#065F46;}
   .rm.s4{border-color:#7C3AED;}.rm.s4 .ph{color:#5B21B6;}
 
   /* IMPACT */
-  .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:6px;}
-  .imp{background:linear-gradient(135deg,#0B0F19,#1F2937);color:#fff;border-radius:18px;padding:28px;text-align:center;}
-  .imp .v{font-size:54px;font-weight:900;line-height:1;color:#FCD34D;}
-  .imp .l{font-size:13px;color:#D1D5DB;margin-top:10px;line-height:1.45;}
+  .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px;}
+  .imp{background:linear-gradient(135deg,#0B0F19,#1F2937);color:#fff;border-radius:16px;padding:24px;text-align:center;}
+  .imp .v{font-size:48px;font-weight:900;line-height:1;color:#FCD34D;}
+  .imp .l{font-size:14px;color:#D1D5DB;margin-top:10px;line-height:1.45;}
 
   /* CLOSING */
-  .closing{background:linear-gradient(135deg,#E11D2E 0%,#F59E0B 50%,#0E9F6E 100%);color:#fff;text-align:center;justify-content:center;}
-  .closing .em{font-size:120px;margin-bottom:8px;}
-  .closing h1{font-size:96px;font-weight:900;letter-spacing:-3px;line-height:1;}
-  .closing .frase{font-size:30px;font-weight:600;max-width:820px;margin:24px auto 0;line-height:1.35;}
-  .closing .firma{margin-top:36px;font-size:16px;opacity:.85;font-style:italic;}
+  .closing{background:linear-gradient(135deg,#E11D2E 0%,#F59E0B 50%,#0E9F6E 100%);color:#fff;text-align:center;justify-content:center;align-items:center;}
+  .closing-logo{width:120px;height:120px;border-radius:32px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+  .closing-logo svg{width:66px;height:66px;stroke:#fff;stroke-width:2;}
+  .closing h1{font-size:88px;font-weight:900;letter-spacing:-3px;line-height:1;}
+  .closing .frase{font-size:26px;font-weight:500;max-width:820px;margin:20px auto 0;line-height:1.4;}
+  .closing .frase b{font-weight:800;}
+  .closing .team{margin-top:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:880px;width:100%;}
+  .closing .team .m{background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:12px 10px;font-size:13px;font-weight:700;line-height:1.3;}
+  .closing .firma{margin-top:24px;font-size:13px;opacity:.85;font-style:italic;}
 
   /* QR section */
-  .qr-box{background:#fff;border-radius:14px;padding:14px;display:inline-block;margin-top:20px;}
+  .qr-box{background:#fff;border-radius:14px;padding:14px;display:inline-block;margin-top:14px;}
   .qr-box #qr canvas, .qr-box #qr img{display:block;}
 
   /* SOURCES */
-  .src-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;font-size:13px;}
-  .src-list .si{padding:10px 14px;background:#F9FAFB;border-left:3px solid #E11D2E;border-radius:6px;}
-  .src-list .si b{color:#111827;}
-  .src-list .si span{color:#6B7280;font-size:12px;display:block;margin-top:2px;}
+  .src-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+  .src-list .si{padding:11px 15px;background:#F9FAFB;border-left:3px solid #E11D2E;border-radius:6px;}
+  .src-list .si b{color:#111827;font-size:15px;}
+  .src-list .si span{color:#6B7280;font-size:14px;display:block;margin-top:2px;}
+
+  .h3-ico{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:10px;color:#374151;font-weight:800;}
+  .h3-ico svg{width:18px;height:18px;color:#E11D2E;}
 
   /* TOOLBAR (screen only) */
   .toolbar{position:fixed;top:14px;right:14px;background:#0B0F19;color:#fff;padding:10px 16px;border-radius:12px;display:flex;gap:10px;align-items:center;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:100;}
-  .toolbar button{background:#E11D2E;color:#fff;border:0;padding:9px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;font-family:inherit;}
+  .toolbar button{background:#E11D2E;color:#fff;border:0;padding:9px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
+  .toolbar button svg{width:16px;height:16px;}
   .toolbar a{color:#9CA3AF;text-decoration:none;font-size:12px;}
   .toolbar a:hover{color:#fff;}
+  .toolbar .label{display:inline-flex;align-items:center;gap:6px;}
+  .toolbar .label svg{width:16px;height:16px;color:#F59E0B;}
 
   /* PRINT */
   @page{size:letter landscape;margin:0;}
@@ -153,8 +193,8 @@
 <body>
 
 <div class="toolbar">
-  <span>📄 Presentación lista para PDF</span>
-  <button onclick="window.print()">🖨️ Exportar PDF</button>
+  <span class="label"><i data-lucide="file-text"></i> Presentación lista para PDF</span>
+  <button onclick="window.print()"><i data-lucide="printer"></i> Exportar PDF</button>
   <a href="index.html">← Hub</a>
 </div>
 
@@ -164,12 +204,12 @@
     <span>Reto BCP #2 — Hackathon 2026</span>
     <span>Equipo Tinkuy · 4 integrantes</span>
   </div>
-  <div class="cover-logo">🤝</div>
+  <div class="cover-logo"><i data-lucide="handshake"></i></div>
   <h1>Tinkuy</h1>
   <div class="q">quechua · encuentro</div>
   <div class="lead">El sistema cívico nacional para que <b>8.4 millones de jóvenes peruanos</b><br>encuentren cómo participar y transformar sus comunidades.</div>
   <div class="pbrand" style="color:rgba(255,255,255,.6);"><div class="dot"></div>Tinkuy · 2026</div>
-  <div class="pnum" style="color:rgba(255,255,255,.6);">01 / 10</div>
+  <div class="pnum" style="color:rgba(255,255,255,.6);">01 / 12</div>
 </section>
 
 <!-- ============ SLIDE 2: HOOK ============ -->
@@ -179,7 +219,7 @@
   <div class="lbl">jóvenes peruanos <span style="color:#E11D2E;">nunca</span> han participado en una iniciativa comunitaria.</div>
   <div class="src">Fuente: ENAJUV · SENAJU · INEI</div>
   <div class="pbrand" style="color:rgba(255,255,255,.6);"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum" style="color:rgba(255,255,255,.6);">02 / 10</div>
+  <div class="pnum" style="color:rgba(255,255,255,.6);">02 / 12</div>
 </section>
 
 <!-- ============ SLIDE 3: PROBLEMÁTICA + DATOS ============ -->
@@ -208,7 +248,7 @@
   </div>
 
   <div class="pbrand"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum">03 / 10</div>
+  <div class="pnum">03 / 12</div>
 </section>
 
 <!-- ============ SLIDE 4: ¿QUÉ ES TINKUY? ============ -->
@@ -218,127 +258,137 @@
   <div class="quechua">quechua · encuentro</div>
   <div class="tag">No es una app. No es una web.<br><b>Es un sistema integral</b> que conecta a los jóvenes con el Estado y las empresas para tomar acción real.</div>
   <div class="pills">
-    <span class="pill">📱 Para jóvenes</span>
-    <span class="pill">🏛️ Para el Estado</span>
-    <span class="pill">🏢 Para empresas y aliados</span>
-    <span class="pill">📡 Para zonas sin internet</span>
+    <span class="pill"><i data-lucide="smartphone"></i> Para jóvenes</span>
+    <span class="pill"><i data-lucide="landmark"></i> Para el Estado</span>
+    <span class="pill"><i data-lucide="building-2"></i> Para empresas y aliados</span>
+    <span class="pill"><i data-lucide="radio-tower"></i> Para zonas sin internet</span>
   </div>
   <div class="pbrand" style="color:rgba(255,255,255,.8);"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum" style="color:rgba(255,255,255,.8);">04 / 10</div>
+  <div class="pnum" style="color:rgba(255,255,255,.8);">04 / 12</div>
 </section>
 
-<!-- ============ SLIDE 5: 3 PRODUCTOS ============ -->
+<!-- ============ SLIDE 5: TINKUY APP ============ -->
 <section class="page">
-  <span class="ptag blue">El ecosistema</span>
-  <h1 class="title">Tres productos. <span class="grad">Un solo sistema.</span></h1>
-  <h2 class="subtitle">Cada uno resuelve una barrera concreta del reto: visibilidad, decisión y conectividad.</h2>
+  <span class="ptag amber" style="font-size:10px;padding:4px 10px;margin-bottom:6px;">Producto 1 · Para jóvenes 15–29</span>
+  <h1 class="title" style="font-size:32px;margin-bottom:4px;"><span class="grad">Tinkuy App</span> — Participar nunca fue tan fácil.</h1>
+  <h2 class="subtitle" style="font-size:13px;margin-bottom:8px;">Identidad verificada por RENIEC. Un espacio oficial, seguro y gamificado para la participación juvenil.</h2>
 
-  <div class="prod-grid">
-    <div class="prod app">
-      <div class="ic">📱</div>
-      <div class="who">Para jóvenes 15-29</div>
-      <h3>Tinkuy App</h3>
-      <ul>
-        <li>Identidad verificada vía RENIEC</li>
-        <li>Crear y unirse a iniciativas</li>
-        <li>Voz Pública: votar consultas</li>
-        <li>Karma Cívico (gamificación)</li>
-        <li>Apoyo psicológico gratuito</li>
-      </ul>
+  <div class="ps">
+    <!-- Left: 3×2 phone grid -->
+    <div style="width:50%;flex-shrink:0;display:flex;flex-direction:column;gap:0;">
+      <div class="app-phones">
+        <div class="app-p"><div class="fr"><img src="img/app-home.png" alt="Home"></div><div class="cap">Feed de iniciativas<small>Eventos cerca de ti</small></div></div>
+        <div class="app-p"><div class="fr"><img src="img/app-create.png" alt="Crear"></div><div class="cap">Crear iniciativa<small>Wizard 3 minutos</small></div></div>
+        <div class="app-p"><div class="fr"><img src="img/app-voz.png" alt="Voz Pública"></div><div class="cap">Voz Pública<small>1 DNI = 1 voto</small></div></div>
+        <div class="app-p"><div class="fr"><img src="img/app-karma.png" alt="Karma"></div><div class="cap">Karma Cívico<small>Tu impacto</small></div></div>
+        <div class="app-p"><div class="fr"><img src="img/app-cuidate.png" alt="Cuídate"></div><div class="cap">Cuídate<small>24/7 gratis</small></div></div>
+        <div class="app-p"><div class="fr"><img src="img/app-channels.png" alt="Canales"></div><div class="cap">Canales<small>Por comunidad</small></div></div>
+      </div>
     </div>
-    <div class="prod mapa">
-      <div class="ic">🗺️</div>
-      <div class="who">Para Estado y empresas</div>
-      <h3>Tinkuy Mapa</h3>
-      <ul>
-        <li>Observatorio nacional juvenil</li>
-        <li>Mapa interactivo de 1 874 distritos</li>
-        <li>Índice de Actividad Cívica (IACJ)</li>
-        <li>Alertas de oportunidad por IA</li>
-        <li>Open Data CC BY 4.0</li>
-      </ul>
-    </div>
-    <div class="prod conecta">
-      <div class="ic">📡</div>
-      <div class="who">Para zonas sin internet</div>
-      <h3>Tinkuy Conecta</h3>
-      <ul>
-        <li>SMS / USSD *789# gratuito</li>
-        <li>IVR en quechua y aymara</li>
-        <li>Red de Tambos MIDIS</li>
-        <li>Radios comunitarias aliadas</li>
-        <li>Inclusión del 60% rural</li>
-      </ul>
+    <!-- Right: features -->
+    <div class="ps-info" style="flex:1;">
+      <div class="ps-feat amb"><div class="icb"><i data-lucide="shield-check"></i></div><div><h4>Identidad RENIEC</h4><p>Solo jóvenes verificados con DNI. Cero bots, espacio seguro y oficial.</p></div></div>
+      <div class="ps-feat amb"><div class="icb"><i data-lucide="calendar-plus"></i></div><div><h4>Crear Iniciativas</h4><p>Lanza eventos culturales, ambientales, charlas o jornadas en 3 minutos.</p></div></div>
+      <div class="ps-feat amb"><div class="icb"><i data-lucide="megaphone"></i></div><div><h4>Voz Pública</h4><p>Consultas del Estado y empresas con voto vinculante (1 DNI = 1 voto).</p></div></div>
+      <div class="ps-feat amb"><div class="icb"><i data-lucide="trophy"></i></div><div><h4>Karma Cívico</h4><p>Cada hora de voluntariado suma puntos canjeables por becas y certificados.</p></div></div>
+      <div class="ps-feat amb"><div class="icb"><i data-lucide="heart-pulse"></i></div><div><h4>Cuídate</h4><p>Acceso a psicólogos 24/7 gratis. Atiende al 30% con ansiedad o depresión.</p></div></div>
+      <div class="ps-feat amb"><div class="icb"><i data-lucide="message-circle"></i></div><div><h4>Canales por comunidad</h4><p>Chats moderados por distrito, región y tema. Espacio oficial y seguro.</p></div></div>
     </div>
   </div>
 
   <div class="pbrand"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum">05 / 10</div>
+  <div class="pnum">05 / 12</div>
 </section>
 
-<!-- ============ SLIDE 6: FUNCIONALIDADES CLAVE ============ -->
+<!-- ============ SLIDE 6: TINKUY MAPA + PANEL ALIADO ============ -->
+<section class="page">
+  <span class="ptag blue" style="font-size:10px;padding:4px 10px;margin-bottom:6px;">Producto 2 · Para Estado y empresas</span>
+  <h1 class="title" style="font-size:32px;margin-bottom:4px;"><span class="grad">Tinkuy Mapa</span> + Panel Aliado — Datos para decidir.</h1>
+  <h2 class="subtitle" style="font-size:13px;margin-bottom:8px;">Por primera vez, Estado y empresas ven y escuchan a la juventud peruana en tiempo real.</h2>
+
+  <!-- Features row: 5 chips horizontales -->
+  <div style="display:flex;gap:8px;margin-bottom:10px;">
+    <div class="ps-feat blu" style="flex:1;padding:8px 10px;"><div class="icb" style="width:28px;height:28px;"><i data-lucide="map-pin"></i></div><div><h4 style="font-size:12px;">Mapa 1 874 distritos</h4><p style="font-size:11px;">Comunidades activas y brechas mapeadas.</p></div></div>
+    <div class="ps-feat blu" style="flex:1;padding:8px 10px;"><div class="icb" style="width:28px;height:28px;"><i data-lucide="bar-chart-3"></i></div><div><h4 style="font-size:12px;">Índice Cívico (IACJ)</h4><p style="font-size:11px;">Métricas: activos, iniciativas, votaciones.</p></div></div>
+    <div class="ps-feat blu" style="flex:1;padding:8px 10px;"><div class="icb" style="width:28px;height:28px;"><i data-lucide="brain"></i></div><div><h4 style="font-size:12px;">Alertas por IA</h4><p style="font-size:11px;">Detecta zonas de baja participación.</p></div></div>
+    <div class="ps-feat blu" style="flex:1;padding:8px 10px;"><div class="icb" style="width:28px;height:28px;"><i data-lucide="megaphone"></i></div><div><h4 style="font-size:12px;">Consultas vinculantes</h4><p style="font-size:11px;">Estado publica; jóvenes votan en vivo.</p></div></div>
+    <div class="ps-feat blu" style="flex:1;padding:8px 10px;"><div class="icb" style="width:28px;height:28px;"><i data-lucide="database"></i></div><div><h4 style="font-size:12px;">Open Data CC BY 4.0</h4><p style="font-size:11px;">Datos descargables para municipalidades.</p></div></div>
+  </div>
+
+  <!-- Images: mapa left | 2 small stacked right -->
+  <div style="display:flex;gap:6px;flex:1;min-height:0;">
+    <div style="flex:1.4;min-height:0;border-radius:12px;overflow:hidden;background:#fff;"><img src="img/mapa-mapa.png" alt="Mapa distritos" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-height:0;">
+      <div class="mf" style="flex:1;min-height:0;"><img src="img/mapa-consultas.png" alt="Consultas activas" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div class="mf" style="flex:1;min-height:0;"><img src="img/aliado-viva.png" alt="Panel Aliado" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;font-size:10px;color:#6B7280;font-weight:700;margin-top:4px;">
+    <span style="flex:1.4;text-align:center;">Mapa Nacional · 1 874 distritos</span>
+    <span style="flex:0.5;text-align:center;">Consultas activas</span>
+    <span style="flex:0.5;text-align:center;">Panel Aliado en vivo</span>
+  </div>
+
+  <div class="pbrand"><div class="dot"></div>Tinkuy</div>
+  <div class="pnum">06 / 12</div>
+</section>
+
+<!-- ============ SLIDE 7: TINKUY CONECTA ============ -->
+<section class="page">
+  <span class="ptag green">Producto 3 · Para zonas sin internet</span>
+  <h1 class="title" style="font-size:44px;margin-bottom:6px;"><span class="grad">Tinkuy Conecta</span> — Nadie queda fuera.</h1>
+  <h2 class="subtitle" style="font-size:16px;margin-bottom:10px;">El 60 % de jóvenes rurales no tiene smartphone. Tinkuy Conecta llega a ellos sin internet.</h2>
+
+  <div class="ps">
+    <!-- Left: Nokia big + conecta screenshot -->
+    <div style="width:42%;flex-shrink:0;display:flex;flex-direction:column;gap:10px;">
+      <div class="nokia-big" style="flex:1;"><img src="img/nokia-ussd.png" alt="USSD *789#"></div>
+      <div class="mf" style="flex-shrink:0;"><img src="img/conecta-full.png" alt="Tinkuy Conecta" style="width:100%;display:block;object-fit:cover;max-height:130px;"></div>
+    </div>
+    <!-- Right: features + highlight -->
+    <div class="ps-info" style="flex:1;">
+      <div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #6EE7B7;border-radius:14px;padding:13px 15px;">
+        <div style="font-size:13px;font-weight:800;color:#065F46;margin-bottom:3px;">¿Por qué importa?</div>
+        <div style="font-size:13px;color:#047857;line-height:1.5;">El Perú tiene <b>1 200+ radios comunitarias</b> y millones de celulares básicos sin datos. Cada uno es un punto de participación juvenil.</div>
+      </div>
+      <div class="ps-feat grn"><div class="icb"><i data-lucide="message-square"></i></div><div><h4>SMS / USSD *789# gratuito</h4><p>Canal oficial marcando *789# desde cualquier celular básico, sin datos.</p></div></div>
+      <div class="ps-feat grn"><div class="icb"><i data-lucide="phone-call"></i></div><div><h4>IVR multilingüe</h4><p>Menú de voz interactivo en español, quechua y aymara. Sin saber leer.</p></div></div>
+      <div class="ps-feat grn"><div class="icb"><i data-lucide="radio"></i></div><div><h4>Radios comunitarias</h4><p>Alianza con radios locales (CONCORTV: 1 200+ emisoras) para difundir iniciativas.</p></div></div>
+      <div class="ps-feat grn"><div class="icb"><i data-lucide="coins"></i></div><div><h4>Tinkuy Fondo</h4><p>Microfinanciamiento juvenil accesible también vía SMS con rendición transparente.</p></div></div>
+    </div>
+  </div>
+
+  <div class="pbrand"><div class="dot"></div>Tinkuy</div>
+  <div class="pnum">07 / 12</div>
+</section>
+
+<!-- ============ SLIDE 8: FUNCIONALIDADES CLAVE ============ -->
 <section class="page">
   <span class="ptag green">Cómo afrontamos el reto</span>
   <h1 class="title">9 funcionalidades clave</h1>
   <h2 class="subtitle">Cada una ataca directamente una barrera del Reto #2.</h2>
 
   <div class="feat-grid">
-    <div class="feat">
-      <div class="em">🔐</div>
-      <h4>Identidad RENIEC</h4>
-      <p>Solo jóvenes verificados con DNI. Cero bots, cero adultos infiltrados, espacio seguro.</p>
-    </div>
-    <div class="feat">
-      <div class="em">📍</div>
-      <h4>Mapa Nacional Juvenil</h4>
-      <p>Por primera vez, mapeamos comunidades activas y zonas con brecha tecnológica.</p>
-    </div>
-    <div class="feat">
-      <div class="em">🗳️</div>
-      <h4>Voz Pública</h4>
-      <p>Consultas oficiales del Estado/empresas con voto vinculante (1 DNI = 1 voto).</p>
-    </div>
-    <div class="feat">
-      <div class="em">🤝</div>
-      <h4>Crear Iniciativas</h4>
-      <p>Wizard para lanzar eventos culturales, ambientales, charlas, jornadas en 3 minutos.</p>
-    </div>
-    <div class="feat">
-      <div class="em">🏆</div>
-      <h4>Karma Cívico</h4>
-      <p>Cada hora de voluntariado suma puntos canjeables por becas y certificados verificables.</p>
-    </div>
-    <div class="feat">
-      <div class="em">🧠</div>
-      <h4>Cuídate</h4>
-      <p>Acceso a psicólogos 24/7 gratis. Atiende el 30% con ansiedad/depresión.</p>
-    </div>
-    <div class="feat">
-      <div class="em">💰</div>
-      <h4>Tinkuy Fondo</h4>
-      <p>Microfinanciamiento para iniciativas juveniles con rendición de cuentas transparente.</p>
-    </div>
-    <div class="feat">
-      <div class="em">🌐</div>
-      <h4>Canales por comunidad</h4>
-      <p>Chats moderados por distrito, región y tema. Espacio oficial y seguro.</p>
-    </div>
-    <div class="feat">
-      <div class="em">📡</div>
-      <h4>SMS / IVR multilingüe</h4>
-      <p>Nadie queda fuera: español, quechua, aymara. Funciona en celular básico.</p>
-    </div>
+    <div class="feat"><div class="icb"><i data-lucide="shield-check"></i></div><div><h4>Identidad RENIEC</h4><p>Solo jóvenes verificados con DNI. Cero bots, espacio seguro y oficial.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="map-pin"></i></div><div><h4>Mapa Nacional Juvenil</h4><p>Por primera vez mapeamos comunidades activas y zonas con brecha tecnológica.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="vote"></i></div><div><h4>Voz Pública</h4><p>Consultas del Estado y empresas con voto vinculante (1 DNI = 1 voto).</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="users"></i></div><div><h4>Crear Iniciativas</h4><p>Lanza eventos culturales, ambientales, charlas o jornadas en 3 minutos.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="trophy"></i></div><div><h4>Karma Cívico</h4><p>Cada hora de voluntariado suma puntos canjeables por becas y certificados.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="heart-pulse"></i></div><div><h4>Cuídate</h4><p>Acceso a psicólogos 24/7 gratis. Atiende al 30% con ansiedad o depresión.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="coins"></i></div><div><h4>Tinkuy Fondo</h4><p>Microfinanciamiento juvenil con rendición de cuentas transparente.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="message-circle"></i></div><div><h4>Canales por comunidad</h4><p>Chats moderados por distrito, región y tema. Espacio oficial y seguro.</p></div></div>
+    <div class="feat"><div class="icb"><i data-lucide="radio-tower"></i></div><div><h4>SMS / IVR multilingüe</h4><p>Nadie queda fuera: español, quechua, aymara. Funciona en celular básico.</p></div></div>
   </div>
 
   <div class="pbrand"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum">06 / 10</div>
+  <div class="pnum">08 / 12</div>
 </section>
 
-<!-- ============ SLIDE 7: VALIDACIÓN ============ -->
+<!-- ============ SLIDE 9: VALIDACIÓN ============ -->
 <section class="page">
   <span class="ptag amber">Validación</span>
   <h1 class="title">Lo validamos con jóvenes <span class="grad">reales.</span></h1>
-  <h2 class="subtitle">Encuesta a <b>50 personas</b> (familiares y allegados del equipo de 4 participantes — 2 somos de Áncash, provincia).</h2>
+  <h2 class="subtitle">Encuesta a <b>50 personas</b>: familiares y allegados del equipo de 4 participantes.</h2>
 
   <div class="survey-grid">
     <div class="surv"><div class="pct" style="color:#0E9F6E;">87%</div><div class="q">"Usaría una app cívica con verificación DNI"</div></div>
@@ -348,18 +398,19 @@
   </div>
 
   <div class="survey-meta">
-    📊 <b>Muestra:</b> 50 personas · Lima y Áncash (costa y sierra) · familiares y conocidos del equipo · mayo 2026
+    <i data-lucide="bar-chart-3"></i> <span><b>Muestra:</b> 50 personas · familiares y conocidos del equipo de 4 participantes · 2026</span>
   </div>
 
-  <div style="margin-top:20px;background:#FFFBEB;border:1px solid #FCD34D;border-radius:12px;padding:16px 20px;font-size:14px;color:#92400E;text-align:center;">
-    💡 <b>Hallazgo clave:</b> la barrera no es la falta de interés. Es la falta de <b>un canal confiable y verificado</b> que conecte a los jóvenes con quienes deciden.
+  <div style="margin-top:18px;background:#FFFBEB;border:1px solid #FCD34D;border-radius:12px;padding:14px 20px;font-size:14px;color:#92400E;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px;">
+    <i data-lucide="lightbulb" style="width:20px;height:20px;flex-shrink:0;"></i>
+    <span><b>Hallazgo clave:</b> la barrera no es la falta de interés. Es la falta de <b>un canal confiable y verificado</b> que conecte a los jóvenes con quienes deciden.</span>
   </div>
 
   <div class="pbrand"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum">07 / 10</div>
+  <div class="pnum">09 / 12</div>
 </section>
 
-<!-- ============ SLIDE 8: ROADMAP ============ -->
+<!-- ============ SLIDE 10: ROADMAP ============ -->
 <section class="page">
   <span class="ptag purple">Roadmap</span>
   <h1 class="title">De piloto a <span class="grad">infraestructura nacional.</span></h1>
@@ -388,24 +439,24 @@
     </div>
   </div>
 
-  <div class="impact-grid" style="margin-top:24px;">
+  <div class="impact-grid" style="margin-top:22px;">
     <div class="imp"><div class="v">2M</div><div class="l">jóvenes activos al año 3</div></div>
     <div class="imp"><div class="v">1 874</div><div class="l">distritos del Perú cubiertos</div></div>
     <div class="imp"><div class="v">12</div><div class="l">lenguas originarias soportadas</div></div>
   </div>
 
   <div class="pbrand"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum">08 / 10</div>
+  <div class="pnum">10 / 12</div>
 </section>
 
-<!-- ============ SLIDE 9: FUENTES + EXPLORAR ============ -->
+<!-- ============ SLIDE 11: FUENTES + EXPLORAR ============ -->
 <section class="page">
   <span class="ptag">Fuentes y mockup interactivo</span>
   <h1 class="title">Datos oficiales. <span class="grad">Sistema navegable.</span></h1>
 
   <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:30px;flex:1;">
     <div>
-      <h3 style="font-size:15px;margin-bottom:10px;color:#374151;font-weight:800;">📚 Fuentes consultadas</h3>
+      <div class="h3-ico"><i data-lucide="book-open"></i> Fuentes consultadas</div>
       <div class="src-list">
         <div class="si"><b>INEI</b><span>Censo 2017, ENAHO, brecha digital</span></div>
         <div class="si"><b>SENAJU</b><span>ENAJUV — Encuesta Nacional de la Juventud</span></div>
@@ -419,30 +470,41 @@
     </div>
 
     <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:10px;">
-      <h3 style="font-size:15px;margin-bottom:10px;color:#374151;font-weight:800;">🔗 Explora el mockup</h3>
+      <div class="h3-ico" style="justify-content:center;"><i data-lucide="qr-code"></i> Explora el mockup</div>
       <div class="qr-box"><div id="qr"></div></div>
       <div style="font-size:11px;color:#6B7280;margin-top:10px;max-width:240px;line-height:1.5;">
-        Escanea el QR o visita el enlace para navegar la App, el Mapa interactivo del Perú, el Panel Aliado y Tinkuy Conecta.
+        Escanea el QR o visita el enlace para navegar la App, el Mapa interactivo, el Panel Aliado y Tinkuy Conecta.
       </div>
       <div id="link-text" style="font-size:11px;color:#E11D2E;margin-top:10px;font-weight:700;word-break:break-all;max-width:240px;"></div>
     </div>
   </div>
 
   <div class="pbrand"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum">09 / 10</div>
+  <div class="pnum">11 / 12</div>
 </section>
 
-<!-- ============ SLIDE 10: CIERRE ============ -->
+<!-- ============ SLIDE 12: CIERRE ============ -->
 <section class="page closing">
-  <div class="em">🤝</div>
+  <div class="closing-logo"><i data-lucide="handshake"></i></div>
   <h1>Gracias</h1>
   <div class="frase">"Tinkunakusun, Perú joven."<br><b>Encontrémonos.</b><br>Porque cuando los jóvenes encuentran cómo participar,<br>el Perú encuentra cómo cambiar.</div>
-  <div class="firma">Equipo Tinkuy · 4 integrantes (2 de Áncash) · Reto BCP #2 · 2026</div>
+
+  <div class="team">
+    <div class="m">Jhair Roussell<br>Meléndez Blas</div>
+    <div class="m">Frances Constanza<br>Tenya Koizumi</div>
+    <div class="m">Cristhofer Arhon<br>Alegre Cotrina</div>
+    <div class="m">Camila<br>Flores</div>
+  </div>
+
+  <div class="firma">Equipo Tinkuy · Reto BCP #2 · Hackathon 2026</div>
   <div class="pbrand" style="color:rgba(255,255,255,.8);"><div class="dot"></div>Tinkuy</div>
-  <div class="pnum" style="color:rgba(255,255,255,.8);">10 / 10</div>
+  <div class="pnum" style="color:rgba(255,255,255,.8);">12 / 12</div>
 </section>
 
 <script>
+// Init Lucide icons
+lucide.createIcons();
+
 // QR code (auto-detect URL; user can edit MOCKUP_URL if hosted)
 const MOCKUP_URL = window.location.origin && window.location.origin !== 'null'
   ? window.location.origin + window.location.pathname.replace(/presentacion\.html$/,'index.html')
